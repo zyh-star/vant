@@ -1,20 +1,30 @@
 {
-  "name": "hips-wx",
-  "version": "0.1.0",
-  "private": true,
+  "name": "hips-wx-components",
+  "version": "0.1.7",
+  "description": "新增打开判定是否重新获取",
+  "main": "dist/index.umd.js",
+  "style": "dist/index.css",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target lib --name index src/components/index.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "hips-wx-utils": "0.1.6-beta24",
+    "lodash.debounce": "^4.0.8",
+    "regenerator-runtime": "^0.14.1",
+    "vant": "^2.13.2",
     "vue": "^2.6.14"
+  },
+  "publishConfig": {
+    "registry": "http://nexus-choerodon.vasen.com/repository/wx-npm-hosted/"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@babel/preset-env": "^7.25.3",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-unit-jest": "~5.0.0",
@@ -22,6 +32,7 @@
     "@vue/test-utils": "^1.1.3",
     "@vue/vue2-jest": "^27.0.0-alpha.2",
     "babel-jest": "^27.0.6",
+    "babel-plugin-import": "^1.13.8",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
