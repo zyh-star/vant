@@ -1,7 +1,7 @@
 {
   "name": "hips-wx-components",
-  "version": "0.1.7",
-  "description": "新增打开判定是否重新获取",
+  "version": "0.1.11-beta7",
+  "description": "update hips-wx-utils",
   "main": "dist/index.umd.js",
   "style": "dist/index.css",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
-    "hips-wx-utils": "0.1.6-beta24",
+    "hips-wx-utils": "0.1.8-beta6",
     "lodash.debounce": "^4.0.8",
     "regenerator-runtime": "^0.14.1",
     "vant": "^2.13.2",
