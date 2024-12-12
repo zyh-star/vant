@@ -3,6 +3,7 @@ node_modules
 public
 src
 tests
+dist
 
 .browserslistrc
 *.config.js
