@@ -1,0 +1,321 @@
+<!--
+* @description 
+* @fileName FieldType.vue
+* @author zheng yuanhou
+* @date 2024/12/12 16:39:07
+!-->
+<template>
+  <van-form
+    ref="form"
+    colon
+    submit-on-enter
+    input-align="right"
+    :class="_class"
+    @submit="onSubmit"
+    @failed="onFailed"
+  >
+    <div
+      v-for="(fields, index) in _fields"
+      v-show="!fields.hidden"
+      :key="index"
+    >
+      <hips-wx-card v-if="fields.type === 'card'" v-bind="fields" />
+      <hips-wx-date
+        v-else-if="fields.type === 'date'"
+        v-model="info[fields.name]"
+        v-bind="fields"
+        :rules="getRules(fields)"
+        :placeholder="getPlaceholder(fields)"
+      />
+      <single-field
+        v-else-if="fields.type === 'single'"
+        ref="single"
+        v-bind="fields"
+        v-model="info[fields.name]"
+        :meaning.sync="info[getMeaning(fields.name)]"
+        :meaningName="getMeaning(fields.name)"
+        :rules="getRules(fields)"
+        :placeholder="getPlaceholder(fields)"
+        :cascades="getCascades(fields)"
+        @confirm="(item) => getConfirm(item, fields)"
+      >
+        <template #fieldType="{ queryFields: querys }">
+          <field-type :value="querys" type="query" @submit="onSingle" />
+        </template>
+      </single-field>
+      <multiple-field
+        v-else-if="fields.type === 'multiple'"
+        ref="multiple"
+        v-bind="fields"
+        v-model="info[fields.name]"
+        :meaning.sync="info[getMeaning(fields.name)]"
+        :rules="getRules(fields)"
+        :placeholder="getPlaceholder(fields)"
+        @confirm="(item) => getConfirm(item, fields)"
+      >
+        <template #fieldType="{ queryFields: querys }">
+          <field-type :value="querys" type="query" @submit="onMultiple" />
+        </template>
+      </multiple-field>
+      <hips-wx-radio
+        v-else-if="fields.type === 'radio'"
+        v-model="info[fields.name]"
+        v-bind="fields"
+        input-align="right"
+        :rules="getRules(fields)"
+        :placeholder="getPlaceholder(fields)"
+      />
+      <van-field
+        v-else
+        v-model="info[fields.name]"
+        v-bind="fields"
+        :rules="getRules(fields)"
+        :placeholder="getPlaceholder(fields)"
+        clearable
+      />
+    </div>
+    <btn-type v-if="_btns.length > 0" v-model="_btns" />
+  </van-form>
+</template>
+
+<script>
+import { Form, Field } from "vant";
+// import {
+//   HipsWxSingle,
+//   HipsWxCard,
+//   HipsWxRadio,
+//   HipsWxMultiple,
+//   HipsWxUpload,
+//   HipsWxDate,
+// } from "..";
+import HipsWxCard from "../HipsWxCard.vue";
+import HipsWxRadio from "../HipsWxRadio.vue";
+import HipsWxUpload from "../HipsWxUpload.vue";
+import HipsWxDate from "../HipsWxDate.vue";
+import BtnType from "./BtnType.vue";
+import SingleField from "./SingleField.vue";
+import MultipleField from "./MultipleField.vue";
+export default {
+  // 组件名称
+  name: "FieldType",
+  // 组件参数 接收来自父组件的数据
+  props: {
+    value: {
+      type: Array,
+      default: () => [],
+    },
+    btns: {
+      type: Array,
+      default: () => [],
+    },
+    type: {
+      type: String,
+      default: "",
+    },
+  },
+  // 局部注册的组件
+  components: {
+    [Form.name]: Form,
+    [Field.name]: Field,
+    // [HipsWxSingle.name]: HipsWxSingle,
+    // [HipsWxMultiple.name]: HipsWxMultiple,
+    [HipsWxCard.name]: HipsWxCard,
+    [HipsWxRadio.name]: HipsWxRadio,
+    [HipsWxUpload.name]: HipsWxUpload,
+    [HipsWxDate.name]: HipsWxDate,
+    [BtnType.name]: BtnType,
+    [SingleField.name]: SingleField,
+    [MultipleField.name]: MultipleField,
+  },
+  // 组件状态值
+  data() {
+    return {
+      info: {},
+    };
+  },
+  // 计算属性
+  computed: {
+    _value() {
+      return this.value.map((item) => {
+        const {
+          field = "",
+          name = field,
+          label = field,
+          dataType = "",
+          type = dataType,
+        } = item;
+        let _type = "";
+        switch (type) {
+          case "TEXT":
+            _type = "text";
+            break;
+          case "NUMBER":
+            _type = "number";
+            break;
+          case "DATE":
+            _type = "date";
+            break;
+          case "DATETIME":
+            _type = "datetime";
+            break;
+          case "TIME":
+            _type = "time";
+            break;
+          case "BOOLEAN":
+            _type = "boolean";
+            break;
+          default:
+            _type = type;
+            break;
+        }
+        return {
+          ...item,
+          name,
+          label,
+          type: _type,
+        };
+      });
+    },
+    _fields() {
+      console.log(this._value);
+
+      return this._value.filter((item) => !item.bind);
+    },
+    binds() {
+      return this._value.filter((item) => item.bind);
+    },
+    _btns() {
+      switch (this.type) {
+        case "query":
+          return ["reset", "search"];
+        default:
+          return this.btns;
+      }
+    },
+    _class() {
+      let className = "";
+      if (this.type === "query") {
+        className = "query-form";
+      }
+      if (this._btns.length > 0) {
+        className += " has-btns";
+      } else {
+        className += " no-btns";
+      }
+      return className;
+    },
+  },
+  created() {
+    const json = {};
+    this._value.forEach((item) => {
+      const { field = "", name = field, value, defaultValue = value } = item;
+      if (name) {
+        json[name] = defaultValue;
+      }
+    });
+    this.info = json;
+  },
+  mounted() {
+    this.$refs.form.submit();
+  },
+  // 组件方法
+  methods: {
+    getMeaning(name = "") {
+      const reg = new RegExp(`^${name}.`);
+      const item = this.binds.find((item) => {
+        return reg.test(item.bind);
+      });
+      if (item) {
+        return item.name;
+      }
+      return name;
+    },
+    getRules(props) {
+      const {
+        rules = [],
+        required = false,
+        label = "",
+        title = label,
+        type = "text",
+      } = props;
+      if (rules.length > 0) {
+        return rules;
+      }
+      switch (type) {
+        case "date":
+        case "single":
+        case "multiple":
+          return [{ required, message: `请选择${title}` }];
+        default:
+          return [{ required, message: `请输入${title}` }];
+      }
+    },
+    getPlaceholder(props) {
+      const {
+        placeholder = "",
+        type = "text",
+        label = "",
+        title = label,
+      } = props;
+      if (placeholder) {
+        return placeholder;
+      }
+      switch (type) {
+        case "date":
+        case "single":
+        case "multiple":
+          return `请选择${title}`;
+        default:
+          return `请输入${title}`;
+      }
+    },
+    getConfirm(item, props) {
+      const { confirm } = props;
+      if (typeof confirm === "function") {
+        confirm(item);
+      }
+    },
+    getCascades(fields) {
+      const { cascades = {} } = fields;
+      const json = {};
+      for (let key in cascades) {
+        const item = this._fields.find((item) => item.name === key);
+        if (item) {
+          json[cascades[key]] = this.info[item.name];
+        } else {
+          json[cascades[key]] = "";
+        }
+      }
+      return json;
+    },
+    onSubmit(props) {
+      this.$emit("submit", props);
+    },
+    onFailed(err) {
+      this.$emit("failed", err);
+    },
+    onSingle(props) {
+      this.$refs.single[0].onSearch(props);
+    },
+    onMultiple(props) {
+      this.$refs.multiple[0].onSearch(props);
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.van-form {
+  overflow-y: auto;
+  max-height: calc(100vh - 46px);
+}
+.query-form {
+  max-height: 20vh;
+}
+.has-btns {
+  padding-bottom: 50px;
+}
+.no-btns {
+  padding-bottom: 0px;
+}
+</style>

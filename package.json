@@ -1,6 +1,6 @@
 {
   "name": "hips-wx-components",
-  "version": "0.1.12-beta31",
+  "version": "0.1.12-beta32",
   "description": "add 切换是否刷新数据",
   "main": "dist/index.umd.js",
   "style": "dist/index.css",
