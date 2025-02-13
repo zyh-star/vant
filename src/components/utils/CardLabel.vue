@@ -6,7 +6,9 @@
 !-->
 <template>
   <div>
-    <div v-if="type === 'string'">{{ getLabel(data, label) }}</div>
+    <div v-if="['string', 'function'].includes(type)">
+      {{ getLabel(data, label) }}
+    </div>
     <div v-else-if="type === 'array'">
       <card-label
         v-for="(_label, i) in label"
@@ -17,7 +19,11 @@
         :class="`between${index}`"
       />
     </div>
-    <div v-else-if="type === 'object'" v-bind="label">
+    <div
+      v-else-if="type === 'object'"
+      v-bind="label"
+      :class="initClassName(data, label)"
+    >
       {{ getLabel(data, label.key) }}
     </div>
     <div v-else></div>
@@ -31,7 +37,7 @@ export default {
   // 组件参数 接收来自父组件的数据
   props: {
     label: {
-      type: [String, Array, Object],
+      type: [String, Array, Object, Function],
       default: "",
     },
     data: {
@@ -61,6 +67,10 @@ export default {
           return "array";
         }
         return "object";
+      } else if (typeof this.label === "function") {
+        return "function";
+      } else if (typeof this.label === "number") {
+        return "number";
       }
       return "";
     },
@@ -73,12 +83,24 @@ export default {
       try {
         if (/[\u4e00-\u9fa5]+/.test(label)) {
           return label;
-        } else {
+        } else if (typeof label === "string") {
           return data[label] || "";
+        } else if (typeof label === "function") {
+          console.log(label, data);
+
+          return label(data);
         }
+        return label;
       } catch {
         return label;
       }
+    },
+    initClassName(data, label) {
+      const { className } = label;
+      if (typeof className === "function") {
+        return className(data);
+      }
+      return className;
     },
   },
 };

@@ -4840,10 +4840,10 @@ highlight.js@^10.7.1:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.3.tgz#697272e3991356e40c3cac566a74eef681756531"
   integrity sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==
 
-hips-wx-utils@0.1.8-beta6:
-  version "0.1.8-beta6"
-  resolved "http://nexus-choerodon.vasen.com/repository/wx-npm-group/hips-wx-utils/-/hips-wx-utils-0.1.8-beta6.tgz#dacaed2b9573344c4a759ec5afd467caefe1883a"
-  integrity sha512-N8EI9fEifott9EWvQI6ffKnLbI1EmV6DXBKYqMuU1/mEIHPc/Yu2ZSL0+5NbzhI6zpn3nZUWgL9Y473NDryVcw==
+hips-wx-utils@^0.1.8-beta13:
+  version "0.1.8-beta13"
+  resolved "http://nexus-choerodon.vasen.com/repository/wx-npm-group/hips-wx-utils/-/hips-wx-utils-0.1.8-beta13.tgz#af32d7fcb1c677653ed06b044eddce88a23c63cf"
+  integrity sha512-YSihto4KMm01EEin1cWylPoYDwJ5LP4vt+gJFmpz521xAHNf/EY2Q1P9j17M/SVbrzosBXzaW3X5KNNfa8aBiQ==
   dependencies:
     "@hips/plugin-vue-jssdk" "^1.1.3"
     axios "0.18.0"

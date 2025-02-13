@@ -7,13 +7,24 @@
 <template>
   <single-field
     ref="single"
-    v-bind="$props"
+    v-bind="$attrs"
     v-model="_value"
     :meaning.sync="_meaning"
+    :label="_label"
+    :disabled="disabled"
+    :readonly="readonly"
     @confirm="onConfirm"
+    @click="onClick"
+    @enter="onEnter"
+    @click-input="onClickInput"
+    @click-left-icon="onClickLeftIcon"
+    @click-right-icon="onClickRightIcon"
   >
     <template #default>
       <slot></slot>
+    </template>
+    <template #label="{ item }">
+      <slot name="label" :item="item"></slot>
     </template>
     <template #fieldType="{ queryFields: querys }">
       <field-type :value="querys" type="query" @submit="onSubmit" />
@@ -24,7 +35,7 @@
 <script>
 import SingleField from "./utils/SingleField.vue";
 import FieldType from "./utils/FieldType.vue";
-import HipsWxSingleProps from "@/props/hips-wx-single";
+// import mixin from "@/mixin/single";
 
 export default {
   // 组件名称
@@ -34,7 +45,29 @@ export default {
     [SingleField.name]: SingleField,
     [FieldType.name]: FieldType,
   },
-  props: HipsWxSingleProps,
+  props: {
+    value: {
+      type: [String, Number],
+      default: "",
+    },
+    meaning: {
+      type: [String, Number],
+      default: "",
+    },
+    title: {
+      type: String,
+      default: "",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  // mixins: [mixin],
   computed: {
     _value: {
       get() {
@@ -52,6 +85,9 @@ export default {
         this.$emit("update:meaning", val);
       },
     },
+    _label() {
+      return this.$attrs.label || this.title;
+    },
   },
   methods: {
     onSubmit(props) {
@@ -59,6 +95,24 @@ export default {
     },
     onConfirm(props) {
       this.$emit("confirm", props);
+    },
+    onClick(event) {
+      this.$emit("click", event);
+    },
+    onClickInput(event) {
+      this.$emit("click-input", event);
+    },
+    onClickLeftIcon(event) {
+      this.$emit("click-left-icon", event);
+    },
+    onClickRightIcon(event) {
+      this.$emit("click-right-icon", event);
+    },
+    onEnter(event) {
+      this.$emit("enter", event);
+    },
+    onScan(value) {
+      this.$refs.single.onScan(value);
     },
   },
 };

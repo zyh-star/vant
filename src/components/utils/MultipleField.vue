@@ -8,65 +8,73 @@
   <div @click="showPopup">
     <slot>
       <van-field
-        v-model="meaning"
-        :disabled="_disabled"
-        :label="_label"
-        :input-align="inputAlign"
-        :required="required"
-        :rules="rules"
-        :error="error"
-        :placeholder="placeholder"
-        :name="meaningName"
-        readonly
+        v-bind="$attrs"
+        v-model="meaningText"
+        name=""
+        :disabled="disabled"
+        :readonly="readonly"
+        :rightIcon="rightIcon"
         is-link
+        @click="onClick"
+        @click-input="onClickInput"
+        @click-left-icon="onClickLeftIcon"
+        @click-right-icon="onClickRightIcon"
+        @keydown.enter="onEnter"
       />
-      <van-field v-show="false" v-model="value" :name="name" readonly />
     </slot>
+    <van-field
+      v-show="false"
+      v-model="checkText"
+      :name="$attrs.name"
+      readonly
+    />
     <van-popup
       ref="popup"
       class="multiple"
       v-model="show"
       position="bottom"
+      get-container="body"
       :style="{ height: '50%' }"
-      :get-container="getContainer"
       safe-area-inset-bottom
     >
-      <HipsWxList
+      <hips-wx-list
         :loading="loading"
         :finished="finished"
         @load="onLoad"
         @refresh="onRefresh"
       >
         <van-checkbox-group v-model="checked">
-          <HipsWxCard
+          <hips-wx-card
             v-for="(item, index) in list"
             :key="index"
             :title="showTitle(item, index)"
-            :value="item[checkValue]"
-            @click="toggleRadio(index, item)"
+            @click="toggleCheck(item)"
           >
             <template #icon>
               <slot name="icon">
                 <van-checkbox
                   ref="checkboxes"
-                  :name="initRadioName(getRadio(item))"
+                  :name="initRadioName(item, valueKey)"
                   shape="square"
                 />
               </slot>
             </template>
-            <template #label>
+            <!-- <template #label>
               <slot name="label" :item="item"></slot>
+            </template> -->
+            <template #label>
+              <card-label :label="labelField" :data="item" class="column" />
             </template>
-          </HipsWxCard>
+          </hips-wx-card>
         </van-checkbox-group>
-      </HipsWxList>
+      </hips-wx-list>
     </van-popup>
     <van-popup
       v-if="!lookupCode && queryFields.length > 0"
       v-model="show"
       class="query"
       position="top"
-      :get-container="getContainer"
+      get-container="body"
       :overlay="false"
       safe-area-inset-top
     >
@@ -86,18 +94,16 @@ import {
   Button,
   CheckboxGroup,
   Checkbox,
+  Toast,
 } from "vant";
 import HipsWxList from "../HipsWxList.vue";
 import HipsWxCard from "../HipsWxCard.vue";
-import { isEmpty } from "lodash";
-import HipsWxMultipleProps from "@/props/hips-wx-multiple";
-import mixin from "@/mixin";
+import CardLabel from "./CardLabel.vue";
+import mixin from "@/mixin/single";
 
 export default {
   // 组件名称
   name: "MultipleField",
-  // 组件参数 接收来自父组件的数据
-  props: HipsWxMultipleProps,
   mixins: [mixin],
   // 局部注册的组件
   components: {
@@ -110,8 +116,9 @@ export default {
     [Button.name]: Button,
     [CheckboxGroup.name]: CheckboxGroup,
     [Checkbox.name]: Checkbox,
-    HipsWxList,
-    HipsWxCard,
+    [HipsWxList.name]: HipsWxList,
+    [HipsWxCard.name]: HipsWxCard,
+    [CardLabel.name]: CardLabel,
   },
   // 组件状态值
   data() {
@@ -119,237 +126,84 @@ export default {
       // 控制是否显示某个组件或弹窗
       show: false,
       // 存储选中的项
-      checked: [],
-      meanings: new Proxy(
-        {},
-        {
-          set: (target, property, value) => {
-            // 在设置属性值之前，可以执行任何需要的逻辑
-            // 设置属性值
-            target[property] = value;
-            this.$emit("update:meaning", this.getMeaning(target));
-            // 返回成功标识
-            return true;
-          },
-          deleteProperty: (target, property) => {
-            // 在删除属性之前，可以执行任何需要的逻辑
-            // 删除属性
-            const v = delete target[property];
-            this.$emit("update:meaning", this.getMeaning(target));
-            return v;
-          },
-        }
-      ),
+      checked: this.value === "" ? [] : this.value.split(","),
+      checkText: this.value.toString(),
+      meanings: this.meaning === "" ? [] : this.meaning.split(","),
+      meaningText: this.meaning.toString(),
+      checks: [],
     };
   },
-  // 计算属性
-  computed: {
-    /**
-     * 获取标签的文本
-     * 如果label属性存在，则返回该属性的值；否则返回title属性的值
-     * @returns {string} 标签的文本
-     */
-    _label() {
-      return this.label || this.title;
-    },
-    _checkTitle() {
-      return this.checkTitle || this.displayField;
-    },
-    /**
-     * 检查并返回适当的 radio 值
-     * 此函数首先检查 checkRadio 属性是否为空字符串、null 或 undefined
-     * 如果 checkRadio 不符合上述条件，则返回 checkValue
-     * 否则，返回 checkRadio
-     */
-    _checkRadio() {
-      // 获取 checkRadio 和 checkValue 的值，减少多次访问对象属性的开销
-      const checkRadio = this.checkRadio;
-      const checkValue = this.checkValue;
-      const valueField = this.valueField;
-      if (checkRadio) {
-        return checkRadio;
-      }
-      if (valueField) {
-        return valueField;
-      }
-      return checkValue;
-    },
-    /**
-     * 计算并返回当前组件的禁用状态
-     * 此函数通过一系列检查来确定组件是否应被禁用
-     */
-    _disabled() {
-      if (this.disabled) {
-        return this.disabled;
-      }
-      // 确保 this.cascades 是一个有效的对象或数组
-      const cascades = this.cascades || {};
-
-      // 使用 Object.values 和 some 方法来检查是否有 undefined, null, "" 的值
-      const flag = Object.values(cascades).some((value) => isEmpty(value));
-
-      // 如果 flag 为真或组件被禁用，则返回 true，否则返回 false
-      return flag;
-    },
-  },
-  // 侦听器
   watch: {
-    cascades: {
-      handler(newValue, oldValue) {
-        if (this.isJsonEqual(newValue, oldValue)) {
-          return false;
-        }
-        let flag = false;
-        for (let key in oldValue) {
-          if (!isEmpty(oldValue[key])) {
-            flag = true;
-          }
-        }
-        if (!flag) {
-          return false;
-        }
-        // 清空check数组，用于存储通过校验的项
-        this.checked = [];
-        for (let key in this.meanings) {
-          delete this.meanings[key];
-        }
-        this.onRefresh();
-      },
-      deep: true,
+    checked(newVal) {
+      this.checkText = newVal.filter((item) => item !== "").join(",");
     },
-    show(value) {
-      if (!value) {
-        const jsonArray = [];
-        Object.keys(this.meanings).forEach((key) => {
-          jsonArray.push(this.meanings[key]);
-        });
-        this.$emit("confirm", jsonArray);
-        return false;
+    meanings(newVal) {
+      this.meaningText = newVal.filter((item) => item !== "").join(",");
+    },
+    value(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.checkText = newVal;
       }
-      this.popupFirstShow = true;
-      // this.listenPopupFirstShow();
     },
-    checked: {
-      handler(values) {
-        this.$emit("input", values.join(","));
-      },
-      deep: true,
-    },
-    value(value) {
-      if (value === "") {
-        this.checked = [];
-        return false;
+    meaning(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.meaningText = newVal;
       }
-      this.checked = value.split(",").map((item) => this.initRadioName(item));
     },
-  },
-  created() {
-    this.initQueryUrl();
+    checkText(newVal, oldVal) {
+      if (oldVal !== newVal) {
+        this.checked = newVal.split(",");
+        this.$emit("input", newVal);
+      }
+    },
+    meaningText(newVal, oldVal) {
+      console.log("🚀 ~ meaningText ~ newVal:", newVal);
+      if (oldVal !== newVal) {
+        this.meanings = newVal.split(",");
+        this.$emit("update:meaning", newVal);
+      }
+    },
   },
   // 组件方法
   methods: {
-    /**
-     * 退出
-     */
-    onClickLeft() {
-      this.hiddenPopup();
-      // this.$emit("click-left", this.checked);
-    },
-    /**
-     * 确认
-     */
-    onClickRight() {
-      this.hiddenPopup();
-      // this.$emit("click-right", this.checked);
-    },
-    /**
-     * @description: 显示弹出层
-     * @return {boolean} 返回一个布尔值，表示弹出层是否应该显示
-     */
-    showPopup() {
-      const flag = this.beforeShowPopup();
-      if (flag) {
-        if (this.list.length === 1 && this.autoSelectSingle) {
-          this.toggleRadio(0);
+    onScan(value) {
+      this.page = 0;
+      const params = {
+        [this.valueKey]: value,
+      };
+      this.fetchData(params).then((res) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.onConfirm(res);
         } else {
-          this.show = true;
+          const { failed = false, message = "", content = [] } = res;
+          if (failed) {
+            Toast.fail(message);
+          } else {
+            if (content.length > 0) {
+              this.onConfirm(content);
+            } else {
+              Toast.fail("未查询到数据");
+              this.onConfirm();
+            }
+          }
         }
-      }
-    },
-    /**
-     * 关闭选择层
-     */
-    hiddenPopup() {
-      const flag = this.beforeHiddenPopup();
-      if (flag) {
-        this.show = false;
-      }
-    },
-    /**
-     * 防止
-     */
-    initRadioName(value) {
-      return value;
-    },
-    /**
-     * @description: 加载数据
-     * @return {Promise} 返回一个Promise对象，表示数据加载的过程
-     */
-    onLoad() {
-      return new Promise((resolve, reject) => {
-        if (this.singleData) {
-          this.initSingleData();
-          resolve();
-          return false;
-        }
-        // 防止多次查询
-        if (!this.popupFirstShow) {
-          resolve();
-          return false;
-        }
-        if (this.loading) {
-          resolve();
-          return false;
-        }
-        this.loading = true;
-        this.fetchData()
-          .then((res) => {
-            this.handleResponse(res);
-            resolve();
-          })
-          .catch((error) => {
-            this.contentIsFailed(error.message);
-            reject(error);
-          })
-          .finally(() => {
-            this.loading = false;
-          });
       });
     },
-    /**
-     * 初始化radio
-     */
-    getRadio(obj) {
-      const checkRadio = this["_checkRadio"];
-
-      if (Array.isArray(checkRadio)) {
-        const str = checkRadio.map((key) => obj[key]).join("-");
-        return str;
+    onConfirm(array = []) {
+      const checked = [];
+      const meanings = [];
+      const checks = [];
+      for (let i = 0; i < array.length; i++) {
+        const value = array[i][this.valueKey];
+        const text = array[i][this.textKey];
+        checked.push(value);
+        meanings.push(text);
+        checks.push(array[i]);
       }
-      return obj[checkRadio];
-    },
-    getMeaning(obj) {
-      let text = "";
-      for (let key in obj) {
-        const _obj = obj[key];
-        const value = _obj[this._checkTitle];
-        if (isEmpty(value)) {
-          continue;
-        } else {
-          text += text === "" ? obj[key] : `,${obj[key]}`;
-        }
-      }
-      return text;
+      this.checked = checked;
+      this.meanings = meanings;
+      this.checks = checks;
+      this.$emit("confirm", this.checks);
     },
     /**
      * 切换多选框状态
@@ -357,13 +211,25 @@ export default {
      * 它还负责更新相关的数据结构以反映此项的选中状态变化
      * @param {Object} item - 需要切换选中状态的项
      */
-    toggleRadio(index, item) {
-      this.$refs.checkboxes[index].toggle();
-      if (this.$refs.checkboxes[index].checked) {
-        delete this.meanings[index];
-      } else {
-        // this.meanings[index] = item[this._checkTitle];
-        this.meanings[index] = item;
+    toggleCheck(item) {
+      try {
+        const value = item[this.valueKey].toString();
+        const meaning = item[this.textKey].toString();
+        const index = this.checked.findIndex(
+          (item) => item.toString() === value
+        );
+        if (index > -1) {
+          this.checked.splice(index, 1);
+          this.meanings.splice(index, 1);
+          this.checks.splice(index, 1);
+        } else {
+          this.checked.push(value);
+          this.meanings.push(meaning);
+          this.checks.push(item);
+        }
+        this.$emit("confirm", this.checks);
+      } catch (error) {
+        console.error("Error in toggleCheck:", error);
       }
     },
     // 返回一个特定的 DOM 节点，作为挂载的父节点
@@ -375,6 +241,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-field__right-icon {
+  .van-icon {
+    font-size: 24px;
+    color: #1989fa;
+  }
+}
 /deep/.van-list {
   height: 50vh;
   background-color: rgba(204, 204, 204, 0.5);
@@ -392,7 +264,7 @@ export default {
 .query {
   .van-form {
     > div:first-child {
-      max-height: 20vh;
+      max-height: 25vh;
       overflow-y: auto;
     }
     > div:last-child {

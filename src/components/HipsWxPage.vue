@@ -32,7 +32,7 @@
 
 <script>
 import { NavBar, Field } from "vant";
-import { detectOS } from "hips-wx-utils";
+// import { detectOS } from "hips-wx-utils";
 export default {
   // 组件名称
   name: "HipsWxPage",
@@ -79,12 +79,12 @@ export default {
       let height = document.querySelector(".hips-page").offsetHeight - 46;
       if (this.$slots["footer"]) {
         const footer = this.$refs.footer;
-        const platform = detectOS();
-        const bottom = /[iI][oO][sS]/.test(platform)
-          ? "calc(0 + env(safe-area-inset-bottom))"
-          : 0;
+        // const platform = detectOS();
+        // const bottom = /[iI][oO][sS]/.test(platform)
+        //   ? "calc(0 + env(safe-area-inset-bottom))"
+        //   : 0;
         if (footer) {
-          footer.style.bottom = bottom;
+          // footer.style.bottom = bottom;
           if (footer.offsetHeight > 0) {
             height -= footer.offsetHeight;
           } else if (footer.offsetHeight <= 0) {
@@ -167,13 +167,13 @@ export default {
   height: 100vh;
   height: @height;
   width: @width;
-  position: relative;
+  // position: relative;
   .content {
     overflow: auto;
   }
   .footer {
-    width: 100vw;
-    position: fixed;
+    // width: 100vw;
+    // position: fixed;
     // bottom: 0;
     // bottom: calc(0 + env(safe-area-inset-bottom));
   }

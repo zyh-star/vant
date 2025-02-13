@@ -12,100 +12,82 @@
     @click-right="onRight"
   >
     <template v-if="rightIcon.name" #nav-bar-right>
-      <van-icon v-bind="rightIcon" />
+      <van-icon v-bind="rightIcon" @click.prevent.stop="onRightIconCLick" />
     </template>
     <van-form
       ref="form"
       input-align="right"
+      :class="_class"
       @submit="onSubmit"
       @failed="onFailed"
     >
-      <div v-for="(fieldObject, index) in value.fields" :key="index">
-        <hips-wx-card v-if="fieldObject.type === 'card'" v-bind="fieldObject" />
+      <div
+        v-for="(fields, index) in _fields"
+        v-show="!fields.hidden"
+        :key="index"
+      >
+        <hips-wx-card v-if="fields.type === 'card'" v-bind="fields" />
         <hips-wx-date
-          v-if="fieldObject.type === 'date'"
-          v-model="info[fieldObject.name]"
-          v-bind="fieldObject"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
+          v-else-if="fields.type === 'date'"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :rules="getRules(fields)"
+          :placeholder="getPlaceholder(fields)"
         />
-        <hips-wx-single
-          v-if="fieldObject.type === 'single'"
-          v-model="info[fieldObject.name]"
-          v-bind="fieldObject"
-          :meaning.sync="info[getMeaning(fieldObject.name)]"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
-        />
-        <hips-wx-multiple
-          v-if="fieldObject.type === 'multiple'"
-          v-model="info[fieldObject.name]"
-          v-bind="fieldObject"
-          :meaning.sync="info[getMeaning(fieldObject.name)]"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
-        />
+        <single-field
+          v-else-if="fields.type === 'single'"
+          ref="single"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :meaning.sync="info[getMeaning(fields.name)]"
+          :meaningName="getMeaning(fields.name)"
+          :rules="getRules(fields)"
+          :placeholder="getPlaceholder(fields)"
+          :cascades="getCascades(fields)"
+          @confirm="(item) => getConfirm(item, fields)"
+          @click="(event) => getClick(event, fields)"
+          @click-left-icon="(event) => getClickLeftIcon(event, fields)"
+          @click-right-icon="(event) => getClickRightIcon(event, fields)"
+        >
+          <template #fieldType="{ queryFields: querys }">
+            <field-type :value="querys" type="query" @submit="onSingle" />
+          </template>
+        </single-field>
+        <multiple-field
+          v-else-if="fields.type === 'multiple'"
+          ref="multiple"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :meaning.sync="info[getMeaning(fields.name)]"
+          :rules="getRules(fields)"
+          :placeholder="getPlaceholder(fields)"
+          @confirm="(item) => getConfirm(item, fields)"
+          @click="(event) => getClick(event, fields)"
+          @click-left-icon="(event) => getClickLeftIcon(event, fields)"
+          @click-right-icon="(event) => getClickRightIcon(event, fields)"
+        >
+          <template #fieldType="{ queryFields: querys }">
+            <field-type :value="querys" type="query" @submit="onMultiple" />
+          </template>
+        </multiple-field>
         <hips-wx-radio
-          v-if="fieldObject.type === 'radio'"
-          v-model="info[fieldObject.name]"
-          v-bind="fieldObject"
-          input-align="right"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
+          v-else-if="fields.type === 'radio'"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :rules="getRules(fields)"
+          :placeholder="getPlaceholder(fields)"
         />
         <van-field
-          v-else-if="fieldObject.type === 'text'"
-          v-model="info[fieldObject.name]"
-          v-bind="fieldObject"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
-        />
-        <van-field
-          v-else-if="fieldObject.type === 'tel'"
-          v-model="info[fieldObject.name]"
-          type="tel"
-          v-bind="fieldObject"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
-        />
-        <van-field
-          v-else-if="fieldObject.type === 'digit'"
-          v-model="info[fieldObject.name]"
-          type="digit"
-          v-bind="fieldObject"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
-        />
-        <van-field
-          v-else-if="fieldObject.type === 'number'"
-          v-model="info[fieldObject.name]"
-          type="number"
-          v-bind="fieldObject"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
-        />
-        <van-field
-          v-else-if="fieldObject.type === 'password'"
-          v-model="info[fieldObject.name]"
-          type="password"
-          v-bind="fieldObject"
-          :rules="getRules(fieldObject)"
-          :placeholder="getPlaceholder(fieldObject)"
+          v-else
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :rules="getRules(fields)"
+          :placeholder="getPlaceholder(fields)"
+          clearable
         />
       </div>
+      <btn-type v-if="_btns.length > 0" v-model="_btns" />
     </van-form>
-    <template #footer>
-      <van-button
-        type="primary"
-        size="large"
-        native-type="submit"
-        form="form"
-        :loading="loading"
-        @click="$refs.form.submit()"
-      >
-        提交
-      </van-button>
-    </template>
   </hips-wx-page>
 </template>
 
@@ -119,9 +101,15 @@ import {
   HipsWxMultiple,
   HipsWxUpload,
   HipsWxDate,
-} from "./components";
-import { Form, Field, Button } from "vant";
-import { bridge } from "hips-wx-utils";
+} from "../components";
+import FieldType from "./utils/FieldType.vue";
+import BtnType from "./utils/BtnType.vue";
+import SingleField from "./utils/SingleField.vue";
+import MultipleField from "./utils/MultipleField.vue";
+import { Form, Field, Button, Toast } from "vant";
+import indexMixin from "@/mixin/index";
+import fieldsMixin from "@/mixin/fields";
+import { instance } from "hips-wx-utils";
 /** ===== import ===== */
 
 export default {
@@ -136,6 +124,10 @@ export default {
     [HipsWxMultiple.name]: HipsWxMultiple,
     [HipsWxUpload.name]: HipsWxUpload,
     [HipsWxDate.name]: HipsWxDate,
+    [FieldType.name]: FieldType,
+    [BtnType.name]: BtnType,
+    [SingleField.name]: SingleField,
+    [MultipleField.name]: MultipleField,
     [Form.name]: Form,
     [Field.name]: Field,
     [Button.name]: Button,
@@ -150,74 +142,79 @@ export default {
           title: "",
           rightText: "",
           webView: false,
+          type: "detail",
+          search: {
+            placeholder: "",
+            name: "",
+            value: "",
+          },
           fields: [],
           queryFields: [],
+          btns: [],
+          card: {
+            title: "",
+            value: "",
+            label: [],
+          },
           transport: {
-            init: "",
+            read: "",
             submit: "",
+            delete: "",
           },
         };
       },
     },
   },
+  mixins: [indexMixin, fieldsMixin],
   // 组件状态值
   data() {
     return {
       loading: false,
       info: {},
+      created: false,
     };
   },
   // 计算属性
   computed: {
     binds() {
-      const { fields = "" } = this.value;
+      const { fields = [] } = this.value;
       return fields.filter((item) => item.bind);
     },
-    title() {
-      const { title = "" } = this.value;
-      return title;
+    _fields() {
+      const { fields = [] } = this.value;
+      return fields.filter((item) => !item.bind);
     },
-    rightText() {
-      const { rightText = "" } = this.value;
-      return rightText;
+    _btns() {
+      const { btns = [] } = this.value;
+      switch (this.type) {
+        case "query":
+          return ["reset", "search", ...btns];
+        default:
+          return btns;
+      }
     },
-    rightIcon() {
-      let name = "";
-      let size = 24;
-      let color = "#1989fa";
-      const { rightIcon = { name: "" }, queryFields = [] } = this.value;
-
-      if (queryFields.length > 0) {
-        name = "search";
+    _class() {
+      let className = "";
+      if (this.type === "query") {
+        className = "query-form";
       }
-
-      if (this.rightText) {
-        name = "";
+      if (this._btns.length > 0) {
+        className += " has-btns";
+      } else {
+        className += " no-btns";
       }
-
-      if (rightIcon.name) {
-        name = rightIcon.name;
-      }
-
-      if (rightIcon.size) {
-        size = rightIcon.size;
-      }
-
-      if (rightIcon.color) {
-        color = rightIcon.color;
-      }
-
-      return { ...rightIcon, name, size, color };
+      return className;
     },
-    webView() {
-      const { webView = false } = this.value;
-      return webView;
+    params() {
+      const query = this.$route?.query || {};
+      const params = this.$route?.params || {};
+      return { ...query, ...params };
     },
   },
   // 路由组件被激活时触发
   activated() {
     /** ===== activated ===== */
-    // this.init();
+    this.init();
     /** ===== activated ===== */
   },
   // 路由组件失活时触发
@@ -232,94 +229,76 @@ export default {
     this.init();
     /** ===== created ===== */
   },
+  unCreated() {
+    /** ===== unCreated ===== */
+    this.unInit();
+    /** ===== unCreated ===== */
+  },
   // 组件生成完毕后触发
   mounted() {
     /** ===== mounted ===== */
     /** ===== mounted ===== */
   },
+  unMounted() {
+    /** ===== unMounted ===== */
+    /** ===== unMounted ===== */
+  },
   // 组件方法
   methods: {
-    onLeft(event) {
-      this.$emit("nav-bar-left", event);
-      if (this.webView) {
-        bridge.closeWebView();
-      } else {
-        this.$router.back();
+    init() {
+      if (this.created) {
+        return false;
+      }
+      this.created = true;
+      setTimeout(() => {
+        this.created = false;
+      }, 2000);
+      if (this.type === "detail") {
+        instance
+          .get(this.transport.read, { params: this.params })
+          .then((res) => {
+            const { failed = false, content } = res;
+            if (failed) {
+              return Promise.reject(res);
+            }
+            if (Array.isArray(content)) {
+              this.info = content[0];
+            } else {
+              this.info = res;
+            }
+          })
+          .catch((err) => {
+            Toast.fail(err.message);
+          });
       }
     },
-    onRight(event) {
-      this.$emit("nav-bar-right", event);
-    },
-    init() {
-      setTimeout(() => {
-        this.info.demo2 = "18";
-        this.info.demo2Meaning = "管道制造部";
-        this.$forceUpdate();
-      }, 500);
-    },
     unInit() {},
-    onSubmit() {
+    onSubmit(props) {
+      const { clickType } = props;
       if (this.loading) {
         return false;
       }
       this.loading = true;
-      console.log("🚀 ~ onSubmit ~ this.info:", this.info);
-      setTimeout(() => {
-        this.loading = false;
-      }, 3000);
+      const { read, submit } = this.transport;
+      let type = clickType === "search" ? "get" : "post";
+      let url = clickType === "search" ? read : submit;
+      let params = clickType === "search" ? { params: this.info } : [this.info];
+      return instance[type](url, params)
+        .then((res) => {
+          const { failed = false } = res;
+          if (failed) {
+            return Promise.reject(res);
+          }
+          this.$emit("submit", res);
+        })
+        .catch((err) => {
+          this.$emit("failed", err);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
-    onFailed(err) {
-      console.log("🚀 ~ onFailed ~ err:", err);
-    },
-    getMeaning(name = "") {
-      const reg = new RegExp(`^${name}.`);
-      const item = this.binds.find((item) => {
-        return reg.test(item.bind);
-      });
-      if (item) {
-        return item.name;
-      }
-      return name;
-    },
-    getRules(props) {
-      const {
-        rules = [],
-        required = false,
-        label = "",
-        title = label,
-        type = "text",
-      } = props;
-      if (rules.length > 0) {
-        return rules;
-      }
-      switch (type) {
-        case "date":
-        case "single":
-        case "multiple":
-          return [{ required, message: `请选择${title}` }];
-        default:
-          return [{ required, message: `请输入${title}` }];
-      }
-    },
-    getPlaceholder(props) {
-      const {
-        placeholder = "",
-        type = "text",
-        label = "",
-        title = label,
-      } = props;
-      if (placeholder) {
-        return placeholder;
-      }
-      switch (type) {
-        case "date":
-        case "single":
-        case "multiple":
-          return `请选择${title}`;
-        default:
-          return `请输入${title}`;
-      }
-    },
+    onFailed() {},
   },
 };
 </script>

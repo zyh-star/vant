@@ -8,20 +8,20 @@
   <div @click="showPopup">
     <slot>
       <van-field
-        v-model="radioMeaning"
-        :disabled="_disabled"
-        :label="_label"
-        :input-align="inputAlign"
-        :required="required"
-        :rules="rules"
-        :error="error"
-        :placeholder="placeholder"
-        :name="meaningName"
-        readonly
+        v-model="singleText"
+        v-bind="$attrs"
+        :disabled="disabled"
+        :readonly="readonly"
+        :rightIcon="rightIcon"
+        name=""
         is-link
+        @click-input="onClickInput"
+        @click-left-icon="onClickLeftIcon"
+        @click-right-icon="onClickRightIcon"
+        @keydown.enter="onEnter"
       />
-      <van-field v-show="false" v-model="radio" :name="name" readonly />
     </slot>
+    <van-field v-show="false" v-model="radio" :name="$attrs.name" readonly />
 
     <van-popup
       ref="popup"
@@ -29,7 +29,7 @@
       v-model="show"
       position="bottom"
       :style="{ height: '50%' }"
-      :get-container="getContainer"
+      get-container="body"
       safe-area-inset-bottom
     >
       <hips-wx-list
@@ -43,16 +43,20 @@
             v-for="(item, index) in list"
             :key="index"
             :title="showTitle(item, index)"
-            :value="item[checkValue]"
             @click="toggleRadio(item)"
           >
             <template #icon>
               <slot name="icon">
-                <van-radio :name="initRadioName(getRadio(item))" />
+                <van-radio :name="initRadioName(item, valueKey)" />
               </slot>
             </template>
-            <template #label>
+            <!-- <template #label>
               <slot name="label" :item="item"></slot>
+            </template> -->
+            <template #label>
+              <slot name="label" :item="item">
+                <card-label :label="labelField" :data="item" class="column" />
+              </slot>
             </template>
           </hips-wx-card>
         </van-radio-group>
@@ -63,7 +67,7 @@
       v-model="show"
       class="query"
       position="top"
-      :get-container="getContainer"
+      get-container="body"
       :overlay="false"
       safe-area-inset-top
     >
@@ -83,18 +87,18 @@ import {
   Button,
   RadioGroup,
   Radio,
+  Toast,
 } from "vant";
 import HipsWxList from "../HipsWxList.vue";
 import HipsWxCard from "../HipsWxCard.vue";
-import { isEmpty } from "lodash";
-import HipsWxSingleProps from "@/props/hips-wx-single";
-import mixin from "@/mixin";
+import CardLabel from "./CardLabel.vue";
+// import { isEmpty } from "lodash";
+// import HipsWxSingleProps from "@/props/hips-wx-single";
+import mixin from "@/mixin/single";
 
 export default {
   // 组件名称
   name: "SingleField",
-  // 组件参数 接收来自父组件的数据
-  props: HipsWxSingleProps,
   mixins: [mixin],
   // 局部注册的组件
   components: {
@@ -109,297 +113,99 @@ export default {
     [Radio.name]: Radio,
     [HipsWxList.name]: HipsWxList,
     [HipsWxCard.name]: HipsWxCard,
+    [CardLabel.name]: CardLabel,
   },
   // 组件状态值
   data() {
     return {
       // 控制弹窗或特定组件的显示状态
       show: false,
+      radio: this.value,
+      singleText: this.meaning.toString(),
     };
   },
-  // 计算属性
-  computed: {
-    /**
-     * 返回当前组件的标签文本
-     * 如果当前组件的 label 属性存在，则返回 label，否则返回 title
-     */
-    _label() {
-      return this.label || this.title;
-    },
-    _checkTitle() {
-      if (this.checkTitle) {
-        return this.checkTitle;
-      }
-      return this.displayField;
-    },
 
-    /**
-     * 检查并返回适当的 radio 值
-     * 此函数首先检查 checkRadio 属性是否为空字符串、null 或 undefined
-     * 如果 checkRadio 不符合上述条件，则返回 checkValue
-     * 否则，返回 checkRadio
-     */
-    _checkRadio() {
-      // 获取 checkRadio 和 checkValue 的值，减少多次访问对象属性的开销
-      const checkRadio = this.checkRadio;
-      const checkValue = this.checkValue;
-      const valueField = this.valueField;
-      if (checkRadio) {
-        return checkRadio;
-      }
-      if (valueField) {
-        return valueField;
-      }
-      return checkValue;
-    },
-
-    /**
-     * 计算并返回当前组件的禁用状态
-     * 此函数通过一系列检查来确定组件是否应被禁用
-     */
-    _disabled() {
-      if (this.disabled) {
-        return this.disabled;
-      }
-      // 确保 this.cascades 是一个有效的对象或数组
-      const cascades = this.cascades || {};
-
-      // 使用 Object.values 和 some 方法来检查是否有 undefined, null, "" 的值
-      const flag = Object.values(cascades).some((value) => isEmpty(value));
-
-      // 如果 flag 为真或组件被禁用，则返回 true，否则返回 false
-      return flag;
-    },
-    radio: {
-      get() {
-        return this.initRadioName(this.value);
-      },
-      set(value) {
-        this.$emit("input", value);
-      },
-    },
-    radioMeaning: {
-      get() {
-        return this.meaning;
-      },
-      set(value) {
-        this.$emit("update:meaning", value);
-      },
-    },
-  },
   watch: {
-    cascades: {
-      handler(newValue, oldValue) {
-        if (this.isJsonEqual(newValue, oldValue)) {
-          return false;
-        }
-        let flag = false;
-        for (let key in oldValue) {
-          if (!isEmpty(oldValue[key])) {
-            flag = true;
-          }
-        }
-
-        if (!flag) {
-          return false;
-        }
-        this.radio = "";
-        this.radioMeaning = "";
-        this.onRefresh();
-      },
-      deep: true,
-    },
-    show(value) {
-      if (!value) {
-        return false;
+    value(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.radio = newVal;
       }
-      this.popupFirstShow = true;
     },
-  },
-  created() {
-    // console.log(this.$props);
-
-    this.initQueryUrl();
+    meaning(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.singleText = newVal;
+      }
+    },
+    radio(newVal) {
+      this.$emit("input", newVal);
+    },
+    singleText(newVal) {
+      this.$emit("update:meaning", newVal);
+    },
   },
   // 组件方法
   methods: {
-    /**
-     * @description: 点击左侧按钮时触发
-     * @return {*}
-     */
-    onClickLeft() {
-      this.hiddenPopup();
-      this.$emit("click-left");
-    },
-
-    /**
-     * @description: 点击右侧按钮时触发
-     * @return {*}
-     */
-    onClickRight() {
-      this.hiddenPopup();
-      this.$emit("click-right");
-    },
-
-    /**
-     * @description: 显示弹出层
-     * @return {boolean} 返回一个布尔值，表示弹出层是否应该显示
-     */
-    showPopup() {
-      const flag = this.beforeShowPopup();
-      if (flag) {
-        if (this.list.length === 1 && this.autoSelectSingle) {
-          this.toggleRadio(this.list[0]);
+    onScan(value) {
+      this.page = 0;
+      const params = {
+        [this.valueKey]: value,
+      };
+      this.fetchData(params).then((res) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.onConfirm(res[0]);
         } else {
-          this.show = true;
+          const { failed = false, message = "", content = [] } = res;
+          if (failed) {
+            Toast.fail(message);
+          } else {
+            if (content.length > 0) {
+              this.onConfirm(content[0]);
+            } else {
+              Toast.fail("未查询到数据");
+              this.onConfirm();
+            }
+          }
         }
-      }
-    },
-
-    /**
-     * @description: 隐藏弹出层
-     * @return {*}
-     */
-    hiddenPopup() {
-      const flag = this.beforeHiddenPopup();
-      if (flag) {
-        this.show = false;
-      }
-    },
-    /**
-     * 防止数字导致选择不生效
-     */
-    initRadioName(value) {
-      return value;
-    },
-
-    /**
-     * @description: 加载数据
-     * @return {Promise} 返回一个Promise对象，表示数据加载的过程
-     */
-    onLoad() {
-      return new Promise((resolve, reject) => {
-        // 如果存在默认数据，则直接赋值并返回
-        if (this.singleData) {
-          this.initSingleData();
-          resolve();
-          return false;
-        }
-
-        // 如果不是第一次打开，则直接返回
-        if (!this.popupFirstShow) {
-          resolve();
-          return false;
-        }
-
-        // 如果正在加载数据，则直接返回
-        if (this.loading) {
-          resolve();
-          return false;
-        }
-        this.loading = true;
-
-        this.fetchData()
-          .then((res) => {
-            this.handleResponse(res);
-            resolve();
-          })
-          .catch((error) => {
-            this.contentIsFailed(error.message);
-            reject(error);
-          })
-          .finally(() => {
-            this.loading = false;
-          });
       });
     },
-
-    /**
-     * @description: 获取单选值
-     * @param {Object} obj - 当前项对象
-     * @return {string|*} - 单选值字符串或原始值
-     */
-    getRadio(obj = {}) {
-      const radioKeys = this["_checkRadio"];
-
-      // 检查 _checkRadio 是否存在且类型正确
-      if (typeof radioKeys === "undefined" || radioKeys === null) {
-        console.error("_checkRadio is not defined or null");
-        return "";
-      }
-
-      // 检查 radioKeys 是否为数组
-      if (Array.isArray(radioKeys)) {
-        // 验证数组内容
-        if (!radioKeys.every((key) => typeof key === "string")) {
-          console.error("Invalid keys in _checkRadio array");
-          return "";
-        }
-
-        // 使用 reduce 方法构建字符串
-        const str = radioKeys.reduce((acc, key) => {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            return acc + (acc ? "-" : "") + obj[key];
-          } else {
-            console.warn(`Key ${key} does not exist in the object`);
-            return acc;
-          }
-        }, "");
-        return str;
-      }
-
-      // 检查单个键是否存在
-      if (
-        typeof radioKeys === "string" &&
-        Object.prototype.hasOwnProperty.call(obj, radioKeys)
-      ) {
-        return obj[radioKeys];
-      }
-
-      // 异常处理
-      console.error("Invalid _checkRadio value");
-      return "";
-    },
-
-    /**
-     * @description: 切换单选项
-     * @param {Object} item - 当前项对象
-     */
-    toggleRadio(item = {}) {
-      try {
-        const checkTitle = this._checkTitle || "";
-        if (!item || !Object.keys(item).length) {
-          // 如果 item 是空对象或 undefined
-          return;
-        }
-        const radioValue = this.initRadioName(this.getRadio(item));
-        const titleValue = item[checkTitle];
-
-        if (this.radio === radioValue) {
-          this.radio = "";
-          this.radioMeaning = "";
-          this.$emit("confirm", {});
-        } else {
-          this.radio = radioValue;
-          this.radioMeaning = titleValue;
-          this.$emit("confirm", item);
-        }
-
-        this.hiddenPopup();
-      } catch (error) {
-        console.error("Error in toggleRadio:", error);
-      }
+    onConfirm(obj = {}) {
+      this.radio = this.initRadioName(obj, this.valueKey);
+      this.singleText = obj[this.textKey];
+      this.$emit("confirm", obj);
     },
 
     // 返回一个特定的 DOM 节点，作为挂载的父节点
     getContainerPopupNode() {
       return document.querySelector(".single");
     },
+    /**
+     * @description: 切换单选项
+     * @param {Object} item - 当前项对象
+     */
+    toggleRadio(item = {}) {
+      try {
+        const value = this.initRadioName(item, this.valueKey);
+        if (value === this.radio) {
+          this.onConfirm({});
+        } else {
+          this.onConfirm(item);
+        }
+        this.hiddenPopup();
+      } catch (error) {
+        console.error("Error in toggleRadio:", error);
+      }
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
+/deep/.van-field__right-icon {
+  .van-icon {
+    font-size: 24px;
+    color: #1989fa;
+  }
+}
 /deep/.van-list {
   height: 50vh;
   background-color: rgba(204, 204, 204, 0.5);
@@ -417,7 +223,7 @@ export default {
 .query {
   .van-form {
     > div:first-child {
-      max-height: 20vh;
+      max-height: 25vh;
       overflow-y: auto;
     }
     > div:last-child {

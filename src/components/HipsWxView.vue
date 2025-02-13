@@ -32,8 +32,10 @@
           <slot :data="data">
             <hips-wx-card
               v-bind="initCard(lists[active].card)"
+              :class="initClassName(data, lists[active].card)"
               :title="initCardTitle(data, lists[active].card, index)"
               :value="initCardValue(data, lists[active].card)"
+              @click="initCardClick(data, lists[active].card)"
             >
               <template>
                 <slot
@@ -77,6 +79,7 @@
               <slot :data="data">
                 <hips-wx-card
                   v-bind="initCard(lists[index].card)"
+                  :class="initClassName(data, lists[index].card)"
                   :title="initCardTitle(data, lists[index].card, i)"
                   :value="initCardValue(data, lists[index].card)"
                   @click="initCardClick(data, lists[index].card)"
@@ -126,7 +129,7 @@
 
 <script>
 /** ===== import ===== */
-import { HipsWxPage, HipsWxList, HipsWxCard } from "../components";
+import { HipsWxPage, HipsWxList, HipsWxCard } from ".";
 import FieldType from "./utils/FieldType.vue";
 import BtnType from "./utils/BtnType.vue";
 import CardLabel from "./utils/CardLabel.vue";
@@ -143,6 +146,8 @@ import {
   Toast,
 } from "vant";
 import { bridge, instance } from "hips-wx-utils";
+import indexMixin from "@/mixin/index";
+// import DataSet from "@/utils/dataSet";
 /** ===== import ===== */
 
 export default {
@@ -172,41 +177,14 @@ export default {
     value: {
       type: Object,
       default: () => {
-        return {
-          title: "",
-          rightText: "",
-          webView: false,
-          noCache: false,
-          // list | tabs
-          type: "list",
-          search: {
-            placeholder: "",
-            name: "",
-            value: "",
-          },
-          tabs: [],
-          queryFields: [],
-          btns: [],
-          card: {
-            title: "",
-            value: "",
-            label: [],
-          },
-          transport: {
-            read: "",
-            submit: "",
-            delete: "",
-          },
-        };
+        return {};
       },
     },
   },
+  mixins: [indexMixin],
   // 组件状态值
   data() {
     return {
-      // 控制右侧图标弹窗的显示状态
-      showRightIconPopup: false,
-
       // 当前激活的步骤或选项的索引
       active: 0,
 
@@ -219,6 +197,7 @@ export default {
       // 存储搜索值的变量，用于在界面上显示或处理搜索逻辑
       searchValue: "",
       badges: [],
+      ds: null,
     };
   },
   // 计算属性
@@ -245,79 +224,6 @@ export default {
     btns() {
       const { btns = [] } = this.value;
       return btns;
-    },
-
-    /**
-     * 获取标题
-     * 从组件的value属性中解构出title字符串
-     * @returns {String} 标题文本
-     */
-    title() {
-      const { title = "" } = this.value;
-      return title;
-    },
-
-    /**
-     * 获取右侧文本
-     * 从组件的value属性中解构出rightText字符串
-     * @returns {String} 右侧文本
-     */
-    rightText() {
-      const { rightText = "" } = this.value;
-      return rightText;
-    },
-
-    /**
-     * 获取右侧图标配置
-     * 根据组件的value属性中的rightIcon和queryFields动态生成图标配置
-     * @returns {Object} 图标配置对象，包含name、size、color等属性
-     */
-    rightIcon() {
-      let name = "";
-      let size = 24;
-      let color = "#1989fa";
-      const { rightIcon = { name: "" }, queryFields = [] } = this.value;
-
-      if (queryFields.length > 0) {
-        name = "search";
-      }
-
-      if (this.rightText) {
-        name = "";
-      }
-
-      if (rightIcon.name) {
-        name = rightIcon.name;
-      }
-
-      if (rightIcon.size) {
-        size = rightIcon.size;
-      }
-
-      if (rightIcon.color) {
-        color = rightIcon.color;
-      }
-      return { ...rightIcon, name, size, color };
-    },
-
-    /**
-     * 获取是否为webView模式
-     * 从组件的value属性中解构出webView布尔值
-     * @returns {Boolean} 是否为webView模式
-     */
-    webView() {
-      const { webView = true } = this.value;
-      return webView;
-    },
-
-    /**
-     * 获取数据展示类型
-     * 从组件的value属性中解构出type字符串，默认为'list'
-     * @returns {String} 数据展示类型，如'list'、'tabs'
-     */
-    type() {
-      const { type = "list" } = this.value;
-      return type;
     },
 
     /**
@@ -362,40 +268,6 @@ export default {
     },
 
     /**
-     * 获取数据传输配置
-     * 从组件的value属性中解构出transport对象，包含read、submit、delete方法的配置
-     * @returns {Object} 数据传输配置对象，包含read、submit、delete等方法的配置
-     */
-    transport() {
-      const {
-        transport = {
-          read: "",
-          submit: "",
-          delete: "",
-        },
-      } = this.value;
-      const { read = "", submit: sub = "", delete: del = "" } = transport;
-      return { ...transport, read, submit: sub, delete: del };
-    },
-
-    /**
-     * 获取卡片配置
-     * 从组件的value属性中解构出card对象，包含title、value、label等属性
-     * @returns {Object} 卡片配置对象，包含title、value、label等属性
-     */
-    card() {
-      const {
-        card = {
-          title: "",
-          value: "",
-          label: [],
-        },
-      } = this.value;
-      const { title = "", value = "", label = [] } = card;
-      return { ...card, title, value, label };
-    },
-
-    /**
      * 根据搜索配置和标签页配置动态生成偏移量设置
      * 如果搜索配置中的key不为空，返回特定的偏移量设置；否则返回默认的偏移量设置
      * @returns {Object} 偏移量设置对象，包含search和tabs的偏移量
@@ -431,7 +303,7 @@ export default {
             data: [],
             transport: this.transport,
             card: this.card,
-            params: {},
+            params: this._params,
           },
         ];
       } else if (this.type === "tabs") {
@@ -444,7 +316,7 @@ export default {
             data: [],
             transport: this.transport,
             card: this.card,
-            params: {},
+            params: this._params,
             ...item,
           };
         });
@@ -478,152 +350,10 @@ export default {
   },
   // 组件方法
   methods: {
-    /**
-     * 处理导航栏左侧按钮点击事件
-     * 此函数被触发时，会根据当前环境（是否为WebView）来决定是关闭WebView还是后退到上一个路由页面
-     *
-     * @param {Event} event - 点击事件对象，包含与事件相关的信息
-     */
-    onLeft(event) {
-      // 触发自定义事件"nav-bar-left"，将点击事件对象传递给父组件
-      this.$emit("nav-bar-left", event);
-
-      // 判断当前环境是否为WebView
-      if (this.webView) {
-        // 如果是WebView环境，调用bridge.closeWebView()方法关闭WebView
-        bridge.closeWebView();
-      } else {
-        // 如果不是WebView环境，使用Vue Router的back方法后退到上一个路由页面
-        this.$router.back();
-      }
-    },
-    /**
-     * 当右侧导航栏被触发时调用此函数
-     *
-     * @param {Event} event - 触发事件的对象，包含事件的具体信息
-     */
-    onRight(event) {
-      // 触发自定义事件"nav-bar-right"，将事件对象传递给父组件
-      this.$emit("nav-bar-right", event);
-    },
-    /**
-     * 右侧图标点击事件处理函数
-     * 此函数用于处理右侧图标被点击时的行为
-     * 如果右侧图标定义了点击事件处理函数，则执行该函数
-     * 否则，显示右侧图标对应的弹窗
-     */
-    onRightIconCLick() {
-      // 检查右侧图标是否定义了点击事件处理函数
-      if (typeof this.rightIcon.click === "function") {
-        // 执行右侧图标的点击事件处理函数
-        this.rightIcon.click();
-        // 表示事件处理完毕，不再执行后续操作
-        return false;
-      }
-      // 如果右侧图标未定义点击事件处理函数，则显示右侧图标对应的弹窗
-      this.showShowRightIconPopup();
-    },
     init() {
       this.badges = this.tabs.map(({ badge }) => badge);
     },
     unInit() {},
-    /**
-     * 根据名称获取其含义
-     * 如果名称在binds数组中有对应的项，则返回该项的name属性，否则返回原始名称
-     * 此函数用于根据给定的名称，在binds数组中查找是否有以该名称起始的项，并返回对应的含义
-     * @param {string} name - 需要查找含义的名称，默认为空字符串
-     * @returns {string} - 如果找到对应的项，则返回该项的name属性，否则返回原始名称
-     */
-    getMeaning(name = "") {
-      // 创建一个正则表达式，用于匹配以给定名称起始的字符串
-      const reg = new RegExp(`^${name}.`);
-
-      // 在binds数组中查找与正则表达式匹配的项
-      const item = this.binds.find((item) => {
-        return reg.test(item.bind);
-      });
-
-      // 如果找到匹配的项，则返回该项的name属性
-      if (item) {
-        return item.name;
-      }
-      // 如果没有找到匹配的项，则返回原始名称
-      return name;
-    },
-    /**
-     * 根据传入的属性获取验证规则
-     * 此函数用于根据不同的表单类型生成相应的验证规则，确保用户输入符合预期
-     * @param {Object} props - 一个对象，包含表单元素的属性
-     * @returns {Array} 返回一个包含验证规则的数组
-     */
-    getRules(props) {
-      // 解构赋值从props中提取规则、必填性、标签、标题和类型，并设置默认值
-      const {
-        rules = [],
-        required = false,
-        label = "",
-        title = label,
-        type = "text",
-      } = props;
-
-      // 如果已经提供了验证规则，则直接返回这些规则
-      if (rules.length > 0) {
-        return rules;
-      }
-
-      // 根据表单类型选择合适的验证规则
-      switch (type) {
-        case "date":
-        case "single":
-        case "multiple":
-          // 对于日期选择、单选和多选类型，要求用户必须进行选择
-          return [{ required, message: `请选择${title}` }];
-        default:
-          // 对于其他类型（默认为文本类型），要求用户必须输入内容
-          return [{ required, message: `请输入${title}` }];
-      }
-    },
-    /**
-     * 获取输入框的占位符
-     *
-     * 此函数旨在根据输入类型和标签动态生成输入框的占位符
-     * 它首先检查是否有直接提供的占位符，如果有，则直接返回该占位符
-     * 如果没有提供占位符，它将根据输入类型（如日期、单选、多选）生成一个默认占位符
-     * 对于其他类型的输入框，它将生成一个通用的输入邀请信息
-     *
-     * @param {Object} props - 组件的属性对象，包含生成占位符所需的信息
-     * @param {string} [props.placeholder=""] - 直接提供的占位符文本，如果提供，则直接使用
-     * @param {string} [props.type="text"] - 输入框的类型，用于生成默认占位符
-     * @param {string} [props.label=""] - 输入框的标签，用于生成默认占位符
-     * @param {string} [props.title=label] - 输入框的标题，默认为标签，用于生成占位符
-     * @returns {string} 返回根据条件生成的占位符文本
-     */
-    getPlaceholder(props) {
-      // 解构赋值从props中提取所需属性，并设置默认值
-      const {
-        placeholder = "",
-        type = "text",
-        label = "",
-        title = label,
-      } = props;
-
-      // 如果直接提供了占位符，则返回该占位符
-      if (placeholder) {
-        return placeholder;
-      }
-
-      // 根据输入类型选择合适的默认占位符
-      switch (type) {
-        case "date":
-        case "single":
-        case "multiple":
-          // 对于日期、单选和多选类型，返回特定格式的占位符
-          return `请选择${title}`;
-        default:
-          // 对于其他类型，返回通用的输入邀请信息
-          return `请输入${title}`;
-      }
-    },
     /**
      * 加载列表数据
      * 当列表需要加载时调用此函数
@@ -669,7 +399,6 @@ export default {
         .then((res) => {
           // 更新页码
           props.page++;
-
           // 解构出响应内容，并合并到现有数据中
           const { content = [], totalElements = 0 } = res;
           this.updateTabsBadge(index, totalElements);
@@ -750,12 +479,6 @@ export default {
         }
       }
     },
-    showShowRightIconPopup() {
-      this.showRightIconPopup = true;
-    },
-    hiddenShowRightIconPopup() {
-      this.showRightIconPopup = false;
-    },
     onRefresh(index) {
       this.lists[index].page = 0;
       this.lists[index].finished = false;
@@ -789,14 +512,18 @@ export default {
       }
     },
     updateTabsBadge(index, badge) {
-      const tabs = this.tabs;
-      const badges = this.badges;
-      const { badge: _tabs } = tabs[index];
-      const __tabs = Number(_tabs);
-      if (typeof __tabs === "number" && !isNaN(__tabs)) {
-        badges[index] = _tabs;
-      } else {
-        badges[index] = badge;
+      try {
+        const tabs = this.tabs;
+        const badges = this.badges;
+        const { badge: _tabs } = tabs[index];
+        const __tabs = Number(_tabs);
+        if (typeof __tabs === "number" && !isNaN(__tabs)) {
+          badges[index] = _tabs;
+        } else {
+          badges[index] = badge;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
     tabsChange(name) {

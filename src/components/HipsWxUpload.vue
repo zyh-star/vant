@@ -35,6 +35,7 @@
         :result-type="resultType"
         :upload-icon="uploadIcon"
         :after-read="handleAutoUploadResult"
+        :multiple="multiple"
         @delete="deleteUploadResult"
         @click-preview="clickPreview"
       >
@@ -156,6 +157,10 @@ export default {
       default: "",
     },
     compress: {
+      type: Boolean,
+      default: false,
+    },
+    multiple: {
       type: Boolean,
       default: false,
     },

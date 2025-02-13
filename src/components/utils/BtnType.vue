@@ -6,11 +6,13 @@
 !-->
 <template>
   <div class="btns">
+    <!-- <van-field v-model="clickType" v-show="false" name="clickType" /> -->
     <van-button
       v-for="(item, index) in showBtns"
       :key="index"
       v-bind="initBtnProps(item)"
-      @click="(event) => onClick(event, item.click)"
+      :loading="loading"
+      @click="(event) => onClick(event, initBtnProps(item))"
     >
       {{ initBtnProps(item).text }}
     </van-button>
@@ -37,7 +39,7 @@
 </template>
 
 <script>
-import { Button, Popup } from "vant";
+import { Button, Field, Popup } from "vant";
 export default {
   // 组件名称
   name: "BtnType",
@@ -49,16 +51,22 @@ export default {
         return [];
       },
     },
+    node: {
+      type: Element,
+    },
   },
   // 局部注册的组件
   components: {
     [Button.name]: Button,
     [Popup.name]: Popup,
+    [Field.name]: Field,
   },
   // 组件状态值
   data() {
     return {
       show: false,
+      loading: false,
+      // clickType: "",
     };
   },
   // 计算属性
@@ -89,6 +97,9 @@ export default {
               type: "info",
               nativeType: "submit",
               text: "查询",
+              click: () => {
+                this.clickType = "search";
+              },
             };
           case "submit":
             return {
@@ -96,6 +107,9 @@ export default {
               type: "info",
               nativeType: "submit",
               text: "提交",
+              click: () => {
+                this.clickType = "submit";
+              },
             };
           default:
             return {
@@ -114,11 +128,16 @@ export default {
         };
       }
     },
-    onClick(event, click) {
+    onClick(event, item) {
+      const { click, nativeType } = item;
       if (typeof click === "function") {
-        event.stopPropagation();
-        event.prentDefault();
-        click(event);
+        if (nativeType === "submit") {
+          click(event);
+        } else {
+          event.stopPropagation();
+          event.preventDefault();
+          click(event);
+        }
       }
       this.show = false;
     },
@@ -130,8 +149,8 @@ export default {
 .btns {
   display: flex;
   width: 100%;
-  position: absolute;
-  bottom: 0;
+  // position: absolute;
+  // bottom: 0;
   > .van-button {
     flex: 1;
   }

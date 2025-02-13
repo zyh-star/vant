@@ -15,6 +15,9 @@
     :input-align="inputAlign"
     :label-width="labelWidth"
   >
+    <template #label>
+      <slot name="label"></slot>
+    </template>
     <template #input v-if="readonly">
       {{ text }}
     </template>

@@ -71,6 +71,30 @@ export default {
     flex: 3;
   }
 }
+.first-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 30px solid transparent;
+}
+.primary > .first-card::before {
+  border-left: 30px solid #07c160; /* 根据需要设置颜色 */
+}
+.danger > .first-card::before {
+  border-left: 30px solid #ee0a24; /* 根据需要设置颜色 */
+}
+.info > .first-card::before {
+  border-left: 30px solid #1989fa; /* 根据需要设置颜色 */
+}
+.warning > .first-card::before {
+  border-left: 30px solid #ff976a; /* 根据需要设置颜色 */
+}
+.yellow > .first-card::before {
+  border-left: 30px solid #ffff00; /* 根据需要设置颜色 */
+}
 .van-cell + .van-cell {
   padding-top: 0;
   padding-bottom: 0;

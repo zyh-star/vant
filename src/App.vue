@@ -5,23 +5,13 @@
 * @date 2024/12/10 09:29:16
 !-->
 <template>
-  <hips-wx-view v-model="value">
-    <template #card-default="{ value }">
-      <van-tag>
-        {{ value }}
-      </van-tag>
-    </template>
-  </hips-wx-view>
-  <!-- <hips-wx-single
-    v-model="info.reasonCode"
-    :meaning.sync="info.reasonMeaning"
-    title="保养原因"
-    :rules="[{ required: true, message: '保养原因不能为空' }]"
-    lov-code="MOULD.REASON"
-    check-title="meaning"
-    check-radio="value"
-    required
-  /> -->
+  <div>
+    <hips-wx-view :data-set="value">
+      <template #right>
+        <van-button type="danger">删除</van-button>
+      </template>
+    </hips-wx-view>
+  </div>
 </template>
 
 <script>
@@ -31,13 +21,19 @@ import {
   HipsWxSingle,
   // HipsWxCard,
   // HipsWxRadio,
-  // HipsWxMultiple,
+  HipsWxMultiple,
   // HipsWxUpload,
   // HipsWxDate,
-  HipsWxView,
+  // HipsWxView,
+  HipsWxDetail,
+  HipsWxSwipe,
 } from "./components";
 import { Form, Field, Button, CellGroup, Cell, Tag } from "vant";
+import HipsWxView from "./components/HipsWxViewV3.vue";
 import { bridge } from "hips-wx-utils";
+import DataSet from "@/utils/dataSetV3.js";
+import DataSetV4 from "@/utils/dataSetV4.js";
+
 /** ===== import ===== */
 
 export default {
@@ -49,10 +45,12 @@ export default {
     [HipsWxSingle.name]: HipsWxSingle,
     // [HipsWxCard.name]: HipsWxCard,
     // [HipsWxRadio.name]: HipsWxRadio,
-    // [HipsWxMultiple.name]: HipsWxMultiple,
+    [HipsWxMultiple.name]: HipsWxMultiple,
     // [HipsWxUpload.name]: HipsWxUpload,
     // [HipsWxDate.name]: HipsWxDate,
     [HipsWxView.name]: HipsWxView,
+    [HipsWxDetail.name]: HipsWxDetail,
+    [HipsWxSwipe.name]: HipsWxSwipe,
     [Form.name]: Form,
     [Field.name]: Field,
     [Button.name]: Button,
@@ -66,277 +64,72 @@ export default {
   // 组件状态值
   data() {
     return {
-      info: {
-        reasonCode: "",
-        reasonMeaning: "",
-      },
-      // value: {
-      //   title: "view",
-      //   type: "tabs",
-      //   tabs: [
-      //     {
-      //       title: "tab1",
-      //       params: {
-      //         name: "tab1",
-      //       },
-      //     },
-      //     {
-      //       title: "tab2",
-      //       params: {
-      //         name: "tab2",
-      //       },
-      //     },
-      //   ],
-      //   // rightIcon: {
-      //   //   name: "search",
-      //   // },
-      //   queryFields: [
-      //     {
-      //       name: "demo",
-      //       label: "demo",
-      //       // required: true,
-      //       type: "single",
-      //       lovCode: "QMS.WORKSHOP",
-      //     },
-      //     {
-      //       name: "meaning",
-      //       bind: "demo.workshopName",
-      //     },
-      //   ],
-      //   btns: [
-      //     {
-      //       text: "新建",
-      //       type: "primary",
-      //     },
-      //   ],
-      //   card: {
-      //     title: "mouldName",
-      //     value: "mouldName",
-      //     label: [
-      //       [
-      //         ["aaa:", "mouldCode", "ccc"],
-      //         "mouldCode",
-      //         { class: "red", key: "mouldCode" },
-      //       ],
-      //       ["mouldCode", "mouldCode"],
-      //     ],
-      //     url: "https://www.baidu.com",
-      //   },
-      //   transport: {
-      //     read: "/mould-manage/v1/0/moulds",
-      //   },
-      // },
-      // value: {
-      //   title: "demo",
-      //   rightText: "",
-      //   webView: false,
-      //   fields: [
-      //     {
-      //       name: "demo",
-      //       type: "card",
-      //       title: "demo",
-      //     },
-      //     {
-      //       name: "demo1",
-      //       type: "date",
-      //       label: "demo1",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "demo2",
-      //       type: "single",
-      //       label: "demo2",
-      //       // required: true,
-      //       lovCode: "QMS.WORKSHOP",
-      //       searchKey: [{ meaning: "全局", value: "keyword" }],
-      //       // searchKey: "workshopName",
-      //       // checkTitle: "workshopName",
-      //       // checkRadio: "workshopId",
-      //     },
-      //     {
-      //       name: "demo2Meaning",
-      //       bind: "demo2.workshopName",
-      //     },
-      //     {
-      //       name: "demo3",
-      //       type: "multiple",
-      //       label: "demo3",
-      //       // required: true,
-      //       lookupCode: "MOULD.PIPEORPIPEFITTING",
-      //       searchKey: "workshopName",
-      //     },
-      //     {
-      //       name: "demo3Meaning",
-      //       bind: "demo3.workshopName",
-      //     },
-      //     {
-      //       name: "demo4",
-      //       type: "radio",
-      //       label: "demo4",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "demo5",
-      //       type: "text",
-      //       label: "demo5",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "demo6",
-      //       type: "tel",
-      //       label: "demo6",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "demo7",
-      //       type: "digit",
-      //       label: "demo7",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "demo8",
-      //       type: "number",
-      //       label: "demo8",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "demo9",
-      //       type: "number",
-      //       label: "demo9",
-      //       required: true,
-      //     },
-      //   ],
-      //   queryFields: [],
-      //   transport: {
-      //     init: "",
-      //     submit: "",
-      //   },
-      // },
+      a: 18,
+      b: 18,
+      c: "18,19",
+      d: "18,19",
+      value: null,
       loading: false,
+      demo: [
+        {
+          materialCode: "1058042",
+          materialName: "VASEN壁挂式温热管线机  R20",
+        },
+        {
+          materialCode: "1058042",
+          materialName: "VASEN壁挂式温热管线机  R20",
+        },
+        {
+          materialCode: "1058042",
+          materialName: "VASEN壁挂式温热管线机  R20",
+        },
+        {
+          materialCode: "1058042",
+          materialName: "VASEN壁挂式温热管线机  R20",
+        },
+        {
+          materialCode: "1058042",
+          materialName: "VASEN壁挂式温热管线机  R20",
+        },
+      ],
+      data: [
+        {
+          meaning: "demo",
+          value: "demo",
+          list: [
+            {
+              meaning: "demo",
+              value: "demo",
+            },
+            {
+              meaning: "demo1",
+              value: "demo1",
+            },
+          ],
+        },
+        {
+          meaning: "demo1",
+          value: "demo1",
+          list: [
+            {
+              meaning: "demo2",
+              value: "demo2",
+            },
+            {
+              meaning: "demo3",
+              value: "demo3",
+            },
+          ],
+        },
+      ],
     };
   },
-  // 计算属性
   computed: {
-    value() {
-      const {
-        serviceTeamList = [
-          {
-            meaning: "demo",
-            value: "demo",
-          },
-          {
-            meaning: "demo1",
-            value: "demo1",
-          },
-        ],
-        roleList = serviceTeamList,
-        updateRoleList,
-        updateLoginCookie,
-      } = this;
+    cascades() {
       return {
-        title: "工单管理",
-        type: "tabs",
-        search: {
-          key: "mouldCode",
-          placeholder: "请输入模具编码",
-          rightIcon: "scan",
-        },
-        tabs: [
-          {
-            title: "我的工单",
-            params: {
-              searchType: "mine",
-              queryType: "PDA",
-              method: 0,
-            },
-            transport: {
-              read: "/mould-manage/v1/0/work-orders",
-            },
-            card: {
-              title: "workOrderName",
-              value: "workOrderStatusMeaning",
-              label: [
-                ["mouldName", "mouldCategoryName"],
-                ["faultNatureMeaning", "workOrderNatureMeaning"],
-                [["申报人员:", "createdByName"]],
-              ],
-              showNumber: true,
-            },
-          },
-          {
-            title: "我的工单",
-            params: {
-              searchType: "mine",
-              queryType: "PDA",
-              method: 0,
-            },
-            noCache: true,
-            transport: {
-              read: "/mould-manage/v1/0/work-orders",
-            },
-            card: {
-              title: "workOrderName",
-              value: "workOrderStatusMeaning",
-              label: [
-                ["mouldName", "mouldCategoryName"],
-                ["faultNatureMeaning", "workOrderNatureMeaning"],
-                [["申报人员:", "createdByName"]],
-              ],
-              showNumber: true,
-            },
-          },
-        ],
-        queryFields: [
-          {
-            name: "serviceTeamId",
-            label: "服务组织",
-            type: "single",
-            singleData: serviceTeamList,
-            checkTitle: "meaning",
-            checkRadio: "value",
-            confirm: updateRoleList,
-          },
-          {
-            name: "serviceTeamName",
-            bind: "serviceTeamId.serviceTeamName",
-          },
-          {
-            name: "role",
-            label: "角色",
-            type: "single",
-            singleData: roleList,
-            checkTitle: "meaning",
-            checkRadio: "value",
-            cascades: { serviceTeamId: "serviceTeamId" },
-            confirm: updateLoginCookie,
-          },
-          {
-            name: "roleName",
-            bind: "role.roleName",
-          },
-        ],
+        aaa: this.a,
+        list: [],
       };
-    },
-    binds() {
-      const { fields = "" } = this.value;
-      return fields.filter((item) => item.bind);
-    },
-    title() {
-      const { title = "" } = this.value;
-      return title;
-    },
-    rightText() {
-      const { rightText = "" } = this.value;
-      return rightText;
-    },
-    rightIcon() {
-      const { rightIcon = { name: "" } } = this.value;
-      const { size = 24, color = "#1989fa" } = rightIcon;
-      return { size, color, ...rightIcon };
-    },
-    webView() {
-      const { webView = false } = this.value;
-      return webView;
     },
   },
   // 路由组件被激活时触发
@@ -355,6 +148,7 @@ export default {
   created() {
     /** ===== created ===== */
     this.init();
+    // this.initValue();
     /** ===== created ===== */
   },
   // 组件生成完毕后触发
@@ -376,10 +170,141 @@ export default {
       this.$emit("nav-bar-right", event);
     },
     init() {
-      setTimeout(() => {
-        // this.value.btns = [];
-        this.$forceUpdate();
-      }, 3000);
+      const v = new DataSetV4({
+        title: "DataSet",
+        type: "tabs",
+        navbar: {
+          rightIcon: "search",
+        },
+        search: [
+          "aaa",
+          "bbb",
+          { key: "ccc", value: "ddd", placeholder: "请输入模具编码" },
+        ],
+        queryFields: [
+          {
+            name: "a",
+            label: "单选",
+            type: "single",
+            lovCode: "MOULD.MOULD",
+            defaultValue: {
+              b: "1",
+              c: "2",
+            },
+            confirm: (value) => {
+              console.log("confirm", value);
+            },
+          },
+          {
+            name: "b",
+            bind: "a.mouldCode",
+          },
+          {
+            name: "c",
+            bind: "a.mouldName",
+          },
+          {
+            name: "f",
+            label: "多选12",
+            defaultValue: "1",
+            cascades: {
+              f: "b",
+            },
+          },
+          {
+            name: "g",
+            label: "单选",
+            type: "single",
+            lovCode: "MOULD.MOULD",
+            params: {
+              a: "1",
+            },
+            cascades: {
+              f: "b",
+            },
+          },
+          {
+            name: "h",
+            bind: "g.mouldCode",
+          },
+          {
+            name: "i",
+            bind: "g.mouldName",
+          },
+        ],
+        tabs: ["aaa", "bbb", "ccc"],
+        list: {
+          url: "mould-manage/v1/0/moulds",
+          title: "mouldName",
+          value: "mouldCode",
+          label: [
+            ["上课时间", "结束时间"],
+            [["还是看", "mouldCode"], "mouldCode"],
+          ],
+          showNumber: true,
+        },
+        btns: ["提交", "测试"],
+      });
+      this.value = v;
+      console.log("🚀 ~ init ~ v:", v);
+      // this.value.title = "哈哈哈哈";
+      // this.value = new DataSet({
+      //   navbar: {
+      //     title: "111",
+      //     rightIcon: "search",
+      //     position: "top",
+      //   },
+      //   search: [
+      //     {
+      //       key: "mouldCode",
+      //       placeholder: "请输入模具编码",
+      //       rightIcon: "scan",
+      //     },
+      //     {
+      //       key: "mouldName",
+      //       placeholder: "请输入模具编码",
+      //       rightIcon: "scan",
+      //     },
+      //   ],
+      //   queryFields: [
+      //     {
+      //       name: "a",
+      //       label: "单选",
+      //       type: "single",
+      //       lovCode: "MOULD.MOULD",
+      //       defaultValue: {
+      //         b: "1",
+      //         c: "2",
+      //       },
+      //     },
+      //     {
+      //       name: "b",
+      //       bind: "a.b",
+      //     },
+      //     {
+      //       name: "c",
+      //       bind: "a.c",
+      //     },
+      //     {
+      //       name: "d",
+      //       label: "多选",
+      //     },
+      //     {
+      //       name: "e",
+      //       label: "多选1",
+      //       cascades: {
+      //         e: "b",
+      //       },
+      //     },
+      //     {
+      //       name: "f",
+      //       label: "多选12",
+      //       cascades: {
+      //         f: "b",
+      //       },
+      //     },
+      //   ],
+      // });
     },
     unInit() {},
     onSubmit() {
@@ -439,6 +364,77 @@ export default {
         default:
           return `请输入${title}`;
       }
+    },
+    onClick() {
+      console.log(this.a, this.b, this.c, this.d);
+    },
+    initValue() {
+      // const updateDemo1 = this.updateDemo1;
+      // const data = this.data;
+      this.value = new DataSet({
+        title: "工单管理",
+        rightText: "返回",
+        webView: true,
+        type: "list",
+        search: {
+          key: "mouldCode",
+          placeholder: "请输入模具编码",
+          rightIcon: "scan",
+        },
+        transport: {
+          read: "anti-counterfeit/v1/0/parts-binds",
+        },
+        card: {
+          title: "mouldName",
+          value: "statusMeaning",
+          label: [
+            ["newMouldDevelopmentCode", "mouldCategoryName", "mouldSpecs"],
+            ["serviceTeamName", "developmentManufacturerName"],
+            [["更新时间：", "lastUpdateDate"]],
+            [["要求完成时间：", "requireDeliveryDate"]],
+            ["unqualifiedReason"],
+          ],
+          showNumber: true,
+          click: (data) => {
+            const { newMouldDevelopmentId = "" } = data;
+            this.to(`/new-mould-development/${newMouldDevelopmentId}`);
+          },
+          className: (data) => {
+            return /前布线/.test(data.mouldName) ? "danger" : "info";
+          },
+        },
+        btns: [
+          {
+            text: "新建",
+          },
+        ],
+        events: {
+          // loadData(data) {},
+        },
+      });
+      this.value.addQueryFields("demo", {
+        defaultValue: {
+          meaning: "demo1",
+          value: "demo1",
+          list: [
+            {
+              meaning: "demo2",
+              value: "demo2",
+            },
+            {
+              meaning: "demo3",
+              value: "demo3",
+            },
+          ],
+        },
+      });
+    },
+    updateDemo1(item = {}) {
+      const { list = [] } = item;
+      this.value.addQueryFields("demo1", {
+        data: list,
+        defaultValue: list[0],
+      });
     },
   },
 };
