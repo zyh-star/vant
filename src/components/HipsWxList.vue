@@ -40,6 +40,10 @@ export default {
       type: String,
       default: "没有更多了",
     },
+    height: {
+      type: Number,
+      default: 0,
+    },
   },
   // 局部注册的组件
   components: {
@@ -109,5 +113,6 @@ export default {
 <style lang="less" scoped>
 .van-list {
   overflow: auto;
+  height: 100vh;
 }
 </style>

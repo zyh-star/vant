@@ -50,9 +50,6 @@
                 <van-radio :name="initRadioName(item, valueKey)" />
               </slot>
             </template>
-            <!-- <template #label>
-              <slot name="label" :item="item"></slot>
-            </template> -->
             <template #label>
               <slot name="label" :item="item">
                 <card-label :label="labelField" :data="item" class="column" />
@@ -91,7 +88,7 @@ import {
 } from "vant";
 import HipsWxList from "../HipsWxList.vue";
 import HipsWxCard from "../HipsWxCard.vue";
-import CardLabel from "./CardLabel.vue";
+import CardLabel from "./view/card/CardLabel.vue";
 // import { isEmpty } from "lodash";
 // import HipsWxSingleProps from "@/props/hips-wx-single";
 import mixin from "@/mixin/single";

@@ -98,7 +98,7 @@ import {
 } from "vant";
 import HipsWxList from "../HipsWxList.vue";
 import HipsWxCard from "../HipsWxCard.vue";
-import CardLabel from "./CardLabel.vue";
+import CardLabel from "./view/card/CardLabel.vue";
 import mixin from "@/mixin/single";
 
 export default {
@@ -157,7 +157,6 @@ export default {
       }
     },
     meaningText(newVal, oldVal) {
-      console.log("🚀 ~ meaningText ~ newVal:", newVal);
       if (oldVal !== newVal) {
         this.meanings = newVal.split(",");
         this.$emit("update:meaning", newVal);

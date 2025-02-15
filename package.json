@@ -1,7 +1,7 @@
 {
   "name": "hips-wx-components",
-  "version": "0.1.13-beta70",
-  "description": "测试附件上传文件生成",
+  "version": "0.1.14-beta11",
+  "description": "tabs读取内置路由配置",
   "main": "dist/index.umd.js",
   "style": "dist/index.css",
   "scripts": {

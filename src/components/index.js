@@ -11,8 +11,7 @@ import HipsWxSingle from "./HipsWxSingle.vue";
 import HipsWxUpload from "./HipsWxUpload.vue";
 import HipsWxRadio from "./HipsWxRadio.vue";
 import HipsWxDate from "./HipsWxDate.vue";
-import HipsWxView from "./HipsWxViewV2.vue";
-import HipsWxDetail from "./HipsWxDetail.vue";
+import HipsWxView from "./HipsWxView.vue";
 import HipsWxSwipe from "./HipsWxSwipe.vue";
 import DataSet from "@/utils/dataSet";
 
@@ -28,7 +27,6 @@ export {
   HipsWxRadio,
   HipsWxDate,
   HipsWxView,
-  HipsWxDetail,
   HipsWxSwipe,
   DataSet,
 };

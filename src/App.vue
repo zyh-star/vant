@@ -7,8 +7,8 @@
 <template>
   <div>
     <hips-wx-view :data-set="value">
-      <template #right>
-        <van-button type="danger">删除</van-button>
+      <template #default="{ value }">
+        <van-tag>{{ value }}</van-tag>
       </template>
     </hips-wx-view>
   </div>
@@ -16,23 +16,10 @@
 
 <script>
 /** ===== import ===== */
-import {
-  // HipsWxPage,
-  HipsWxSingle,
-  // HipsWxCard,
-  // HipsWxRadio,
-  HipsWxMultiple,
-  // HipsWxUpload,
-  // HipsWxDate,
-  // HipsWxView,
-  HipsWxDetail,
-  HipsWxSwipe,
-} from "./components";
-import { Form, Field, Button, CellGroup, Cell, Tag } from "vant";
-import HipsWxView from "./components/HipsWxViewV3.vue";
+import { Tag } from "vant";
+import HipsWxView from "./components/HipsWxView.vue";
 import { bridge } from "hips-wx-utils";
-import DataSet from "@/utils/dataSetV3.js";
-import DataSetV4 from "@/utils/dataSetV4.js";
+import DataSet from "@/utils/dataSet.js";
 
 /** ===== import ===== */
 
@@ -41,21 +28,7 @@ export default {
   name: "DemoApp",
   /** ===== components ===== */
   components: {
-    // [HipsWxPage.name]: HipsWxPage,
-    [HipsWxSingle.name]: HipsWxSingle,
-    // [HipsWxCard.name]: HipsWxCard,
-    // [HipsWxRadio.name]: HipsWxRadio,
-    [HipsWxMultiple.name]: HipsWxMultiple,
-    // [HipsWxUpload.name]: HipsWxUpload,
-    // [HipsWxDate.name]: HipsWxDate,
     [HipsWxView.name]: HipsWxView,
-    [HipsWxDetail.name]: HipsWxDetail,
-    [HipsWxSwipe.name]: HipsWxSwipe,
-    [Form.name]: Form,
-    [Field.name]: Field,
-    [Button.name]: Button,
-    [CellGroup.name]: CellGroup,
-    [Cell.name]: Cell,
     [Tag.name]: Tag,
   },
   /** ===== components ===== */
@@ -64,74 +37,10 @@ export default {
   // 组件状态值
   data() {
     return {
-      a: 18,
-      b: 18,
-      c: "18,19",
-      d: "18,19",
       value: null,
-      loading: false,
-      demo: [
-        {
-          materialCode: "1058042",
-          materialName: "VASEN壁挂式温热管线机  R20",
-        },
-        {
-          materialCode: "1058042",
-          materialName: "VASEN壁挂式温热管线机  R20",
-        },
-        {
-          materialCode: "1058042",
-          materialName: "VASEN壁挂式温热管线机  R20",
-        },
-        {
-          materialCode: "1058042",
-          materialName: "VASEN壁挂式温热管线机  R20",
-        },
-        {
-          materialCode: "1058042",
-          materialName: "VASEN壁挂式温热管线机  R20",
-        },
-      ],
-      data: [
-        {
-          meaning: "demo",
-          value: "demo",
-          list: [
-            {
-              meaning: "demo",
-              value: "demo",
-            },
-            {
-              meaning: "demo1",
-              value: "demo1",
-            },
-          ],
-        },
-        {
-          meaning: "demo1",
-          value: "demo1",
-          list: [
-            {
-              meaning: "demo2",
-              value: "demo2",
-            },
-            {
-              meaning: "demo3",
-              value: "demo3",
-            },
-          ],
-        },
-      ],
     };
   },
-  computed: {
-    cascades() {
-      return {
-        aaa: this.a,
-        list: [],
-      };
-    },
-  },
+  computed: {},
   // 路由组件被激活时触发
   activated() {
     /** ===== activated ===== */
@@ -170,272 +79,185 @@ export default {
       this.$emit("nav-bar-right", event);
     },
     init() {
-      const v = new DataSetV4({
-        title: "DataSet",
+      const data = [
+        {
+          serviceTeamId: "604266362377998336",
+          serviceTeamName: "PPR管件一车间模具管理",
+          defaultFlag: 0,
+          roleList: [
+            { roleName: "模具主管", roleId: "0" },
+            { roleName: "内修主管", roleId: "1" },
+            { roleName: "外修主管", roleId: "2" },
+            { roleName: "模具管理员", roleId: "3" },
+            { roleName: "新模跟踪员", roleId: "4" },
+            { roleName: "试模员", roleId: "5" },
+            { roleName: "品质管理员", roleId: "6" },
+            { roleName: "技术专员", roleId: "7" },
+            { roleName: "保养员", roleId: "8" },
+            { roleName: "车间维修专员", roleId: "9" },
+            { roleName: "维修跟踪员", roleId: "10" },
+            { roleName: "内修技工", roleId: "11" },
+            { roleName: "换模调试员", roleId: "12" },
+            { roleName: "外协厂家", roleId: "13" },
+            { roleName: "外协专员", roleId: "14" },
+            { roleName: "车间巡检", roleId: "15" },
+            { roleName: "开发厂家", roleId: "16" },
+          ],
+        },
+        {
+          serviceTeamId: "619453782060830720",
+          serviceTeamName: "PPR管道车间模具管理",
+          defaultFlag: 0,
+          roleList: [
+            { roleName: "模具管理员", roleId: "3" },
+            { roleName: "模具主管", roleId: "0" },
+            { roleName: "内修主管", roleId: "1" },
+          ],
+        },
+      ];
+      const v = new DataSet({
+        title: "工单管理",
+        key: "new-mould-development",
         type: "tabs",
+        webView: true,
         navbar: {
           rightIcon: "search",
         },
-        search: [
-          "aaa",
-          "bbb",
-          { key: "ccc", value: "ddd", placeholder: "请输入模具编码" },
-        ],
-        queryFields: [
-          {
-            name: "a",
-            label: "单选",
-            type: "single",
-            lovCode: "MOULD.MOULD",
-            defaultValue: {
-              b: "1",
-              c: "2",
-            },
-            confirm: (value) => {
-              console.log("confirm", value);
-            },
-          },
-          {
-            name: "b",
-            bind: "a.mouldCode",
-          },
-          {
-            name: "c",
-            bind: "a.mouldName",
-          },
-          {
-            name: "f",
-            label: "多选12",
-            defaultValue: "1",
-            cascades: {
-              f: "b",
-            },
-          },
-          {
-            name: "g",
-            label: "单选",
-            type: "single",
-            lovCode: "MOULD.MOULD",
-            params: {
-              a: "1",
-            },
-            cascades: {
-              f: "b",
-            },
-          },
-          {
-            name: "h",
-            bind: "g.mouldCode",
-          },
-          {
-            name: "i",
-            bind: "g.mouldName",
-          },
-        ],
-        tabs: ["aaa", "bbb", "ccc"],
-        list: {
-          url: "mould-manage/v1/0/moulds",
-          title: "mouldName",
-          value: "mouldCode",
-          label: [
-            ["上课时间", "结束时间"],
-            [["还是看", "mouldCode"], "mouldCode"],
-          ],
-          showNumber: true,
-        },
-        btns: ["提交", "测试"],
-      });
-      this.value = v;
-      console.log("🚀 ~ init ~ v:", v);
-      // this.value.title = "哈哈哈哈";
-      // this.value = new DataSet({
-      //   navbar: {
-      //     title: "111",
-      //     rightIcon: "search",
-      //     position: "top",
-      //   },
-      //   search: [
-      //     {
-      //       key: "mouldCode",
-      //       placeholder: "请输入模具编码",
-      //       rightIcon: "scan",
-      //     },
-      //     {
-      //       key: "mouldName",
-      //       placeholder: "请输入模具编码",
-      //       rightIcon: "scan",
-      //     },
-      //   ],
-      //   queryFields: [
-      //     {
-      //       name: "a",
-      //       label: "单选",
-      //       type: "single",
-      //       lovCode: "MOULD.MOULD",
-      //       defaultValue: {
-      //         b: "1",
-      //         c: "2",
-      //       },
-      //     },
-      //     {
-      //       name: "b",
-      //       bind: "a.b",
-      //     },
-      //     {
-      //       name: "c",
-      //       bind: "a.c",
-      //     },
-      //     {
-      //       name: "d",
-      //       label: "多选",
-      //     },
-      //     {
-      //       name: "e",
-      //       label: "多选1",
-      //       cascades: {
-      //         e: "b",
-      //       },
-      //     },
-      //     {
-      //       name: "f",
-      //       label: "多选12",
-      //       cascades: {
-      //         f: "b",
-      //       },
-      //     },
-      //   ],
-      // });
-    },
-    unInit() {},
-    onSubmit() {
-      if (this.loading) {
-        return false;
-      }
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 3000);
-    },
-    getMeaning(name = "") {
-      const reg = new RegExp(`^${name}.`);
-      const item = this.binds.find((item) => {
-        return reg.test(item.bind);
-      });
-      if (item) {
-        return item.name;
-      }
-      return name;
-    },
-    getRules(props) {
-      const {
-        rules = [],
-        required = false,
-        label = "",
-        title = label,
-        type = "text",
-      } = props;
-      if (rules.length > 0) {
-        return rules;
-      }
-      switch (type) {
-        case "date":
-        case "single":
-        case "multiple":
-          return [{ required, message: `请选择${title}` }];
-        default:
-          return [{ required, message: `请输入${title}` }];
-      }
-    },
-    getPlaceholder(props) {
-      const {
-        placeholder = "",
-        type = "text",
-        label = "",
-        title = label,
-      } = props;
-      if (placeholder) {
-        return placeholder;
-      }
-      switch (type) {
-        case "date":
-        case "single":
-        case "multiple":
-          return `请选择${title}`;
-        default:
-          return `请输入${title}`;
-      }
-    },
-    onClick() {
-      console.log(this.a, this.b, this.c, this.d);
-    },
-    initValue() {
-      // const updateDemo1 = this.updateDemo1;
-      // const data = this.data;
-      this.value = new DataSet({
-        title: "工单管理",
-        rightText: "返回",
-        webView: true,
-        type: "list",
         search: {
           key: "mouldCode",
           placeholder: "请输入模具编码",
           rightIcon: "scan",
         },
-        transport: {
-          read: "anti-counterfeit/v1/0/parts-binds",
-        },
-        card: {
-          title: "mouldName",
-          value: "statusMeaning",
+        tabs: [
+          {
+            title: "我的工单",
+            queryParameter: {
+              searchType: "mine",
+              queryType: "PDA",
+              method: 0,
+            },
+            badge: true,
+          },
+          {
+            title: "公共池",
+            queryParameter: {
+              queryType: "PDA",
+              method: 1,
+            },
+            badge: true,
+          },
+          {
+            title: "内修",
+            queryParameter: {
+              queryType: "PDA",
+              inWorkshopFlag: 0,
+              searchType: "IN",
+            },
+            badge: true,
+          },
+          {
+            title: "外修",
+            queryParameter: {
+              queryType: "PDA",
+              inWorkshopFlag: 0,
+              searchType: "OUT",
+            },
+            badge: true,
+          },
+          {
+            title: "试模验收",
+            queryParameter: {
+              queryType: "PDA",
+              searchType: "try",
+            },
+            badge: true,
+          },
+        ],
+        list: {
+          title: "workOrderName",
+          value: "workOrderStatusMeaning",
           label: [
-            ["newMouldDevelopmentCode", "mouldCategoryName", "mouldSpecs"],
-            ["serviceTeamName", "developmentManufacturerName"],
-            [["更新时间：", "lastUpdateDate"]],
-            [["要求完成时间：", "requireDeliveryDate"]],
-            ["unqualifiedReason"],
+            ["mouldName", "mouldCategoryName"],
+            ["faultNatureMeaning", "workOrderNatureMeaning"],
+            [["申报人员:", "createdByName"], "lastUpdateDate"],
           ],
           showNumber: true,
           click: (data) => {
-            const { newMouldDevelopmentId = "" } = data;
-            this.to(`/new-mould-development/${newMouldDevelopmentId}`);
-          },
-          className: (data) => {
-            return /前布线/.test(data.mouldName) ? "danger" : "info";
+            const { workOrderId = "" } = data;
+            if (workOrderId === "") {
+              return false;
+            }
+            this.to(`/work-order/${workOrderId}`);
           },
         },
-        btns: [
+        transport: {
+          read: "https://dev-gateway.vasen.com/mould-manage/v1/0/new-mould-developments",
+        },
+        queryFields: [
           {
-            text: "新建",
+            name: "serviceTeam",
+            label: "服务组织",
+            type: "single",
+            data,
+            textField: "serviceTeamName",
+            valueField: "serviceTeamId",
+            defaultValue: {
+              serviceTeamId: "604266362377998336",
+              serviceTeamName: "PPR管件一车间模具管理",
+            },
+            cache: true,
+          },
+          {
+            name: "serviceTeamId",
+            bind: "serviceTeam.serviceTeamId",
+          },
+          {
+            name: "serviceTeamName",
+            bind: "serviceTeam.serviceTeamName",
+          },
+          {
+            name: "roleObject",
+            label: "角色",
+            type: "single",
+            textField: "roleName",
+            valueField: "roleId",
+            cascades: { serviceTeamId: "serviceTeamId" },
+            data: (obj) => {
+              const { serviceTeamId: a } = obj;
+              const item = data.find(({ serviceTeamId: b }) => {
+                return a === b;
+              });
+              if (item) {
+                return item.roleList;
+              }
+              return [];
+            },
+            cache: true,
+          },
+          {
+            name: "role",
+            bind: "roleObject.roleId",
+          },
+          {
+            name: "roleName",
+            bind: "roleObject.roleName",
+          },
+          {
+            name: "aaa",
+            label: "aaa",
+            type: "single",
+            lovCode: "MOULD.MOULD",
+          },
+          {
+            name: "f",
+            label: "f",
+            cache: true,
           },
         ],
-        events: {
-          // loadData(data) {},
-        },
       });
-      this.value.addQueryFields("demo", {
-        defaultValue: {
-          meaning: "demo1",
-          value: "demo1",
-          list: [
-            {
-              meaning: "demo2",
-              value: "demo2",
-            },
-            {
-              meaning: "demo3",
-              value: "demo3",
-            },
-          ],
-        },
-      });
+      this.value = v;
     },
-    updateDemo1(item = {}) {
-      const { list = [] } = item;
-      this.value.addQueryFields("demo1", {
-        data: list,
-        defaultValue: list[0],
-      });
-    },
+    unInit() {},
   },
 };
 </script>
