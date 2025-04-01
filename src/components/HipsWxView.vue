@@ -20,12 +20,18 @@
           <template #default="{ value }">
             <slot name="default" :value="value" />
           </template>
+          <template #right="{ data: rightData }">
+            <slot name="right" :data="rightData" />
+          </template>
         </data-list>
       </div>
       <div v-else-if="type === 'tabs'">
         <tabs-list ref="tabList" :tabs="tabs" :height="height">
           <template #default="{ value }">
             <slot name="default" :value="value" />
+          </template>
+          <template #right="{ data: rightData }">
+            <slot name="right" :data="rightData" />
           </template>
         </tabs-list>
       </div>

@@ -55,6 +55,7 @@ export default {
     return {
       refresh: false,
       disabled: false,
+      scrollTop: 0,
     };
   },
   // 计算属性
@@ -91,6 +92,7 @@ export default {
     },
     onScroll(e) {
       this.disabled = e.target.scrollTop !== 0;
+      this.scrollTop = e.target.scrollTop;
     },
     init() {
       this.$refs.list.$el.addEventListener("scroll", this.onScroll);
@@ -98,6 +100,11 @@ export default {
     uninit() {
       this.$refs.list.$el.removeEventListener("scroll", this.onScroll);
     },
+  },
+  activated() {
+    if (this.$refs.list) {
+      this.$refs.list.$el.scrollTop = this.scrollTop;
+    }
   },
   mounted() {
     this.$nextTick(() => {

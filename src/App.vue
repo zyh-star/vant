@@ -1,24 +1,32 @@
 <!--
-* @description 
+* @description HipsWxView Demo
 * @fileName demo.vue
 * @author zheng yuanhou
 * @date 2024/12/10 09:29:16
 !-->
 <template>
-  <div>
-    <hips-wx-view :data-set="value">
-      <template #default="{ value }">
-        <van-tag>{{ value }}</van-tag>
-      </template>
-    </hips-wx-view>
-  </div>
+  <!-- <hips-wx-view :data-set="value">
+    <template #default="{ value }">
+      <van-tag>{{ value }}</van-tag>
+    </template>
+    <template #right> 1111 </template>
+  </hips-wx-view> -->
+  <!-- <hips-wx-page title="111"> 111 </hips-wx-page> -->
+  <hips-wx-single
+    label="demo"
+    lov-url="anti-counterfeit/v1/0/parts-batchs"
+    textField="serviceTeamName"
+    valueField="serviceTeamId"
+    :querys="[{ label: 'aaa', name: 'sss' }]"
+  ></hips-wx-single>
 </template>
 
 <script>
 /** ===== import ===== */
 import { Tag } from "vant";
 import HipsWxView from "./components/HipsWxView.vue";
-import { bridge } from "hips-wx-utils";
+import HipsWxPage from "./components/HipsWxPage.vue";
+import HipsWxSingle from "./components/HipsWxSingle.vue";
 import DataSet from "@/utils/dataSet.js";
 
 /** ===== import ===== */
@@ -29,6 +37,8 @@ export default {
   /** ===== components ===== */
   components: {
     [HipsWxView.name]: HipsWxView,
+    [HipsWxPage.name]: HipsWxPage,
+    [HipsWxSingle.name]: HipsWxSingle,
     [Tag.name]: Tag,
   },
   /** ===== components ===== */
@@ -38,71 +48,12 @@ export default {
   data() {
     return {
       value: null,
-    };
-  },
-  computed: {},
-  // 路由组件被激活时触发
-  activated() {
-    /** ===== activated ===== */
-    // this.init();
-    /** ===== activated ===== */
-  },
-  // 路由组件失活时触发
-  deactivated() {
-    /** ===== deactivated ===== */
-    this.unInit();
-    /** ===== deactivated ===== */
-  },
-  // 组件生成时触发
-  created() {
-    /** ===== created ===== */
-    this.init();
-    // this.initValue();
-    /** ===== created ===== */
-  },
-  // 组件生成完毕后触发
-  mounted() {
-    /** ===== mounted ===== */
-    /** ===== mounted ===== */
-  },
-  // 组件方法
-  methods: {
-    onLeft(event) {
-      this.$emit("nav-bar-left", event);
-      if (this.webView) {
-        bridge.closeWebView();
-      } else {
-        this.$router.back();
-      }
-    },
-    onRight(event) {
-      this.$emit("nav-bar-right", event);
-    },
-    init() {
-      const data = [
+      singleData: [
         {
           serviceTeamId: "604266362377998336",
           serviceTeamName: "PPR管件一车间模具管理",
           defaultFlag: 0,
-          roleList: [
-            { roleName: "模具主管", roleId: "0" },
-            { roleName: "内修主管", roleId: "1" },
-            { roleName: "外修主管", roleId: "2" },
-            { roleName: "模具管理员", roleId: "3" },
-            { roleName: "新模跟踪员", roleId: "4" },
-            { roleName: "试模员", roleId: "5" },
-            { roleName: "品质管理员", roleId: "6" },
-            { roleName: "技术专员", roleId: "7" },
-            { roleName: "保养员", roleId: "8" },
-            { roleName: "车间维修专员", roleId: "9" },
-            { roleName: "维修跟踪员", roleId: "10" },
-            { roleName: "内修技工", roleId: "11" },
-            { roleName: "换模调试员", roleId: "12" },
-            { roleName: "外协厂家", roleId: "13" },
-            { roleName: "外协专员", roleId: "14" },
-            { roleName: "车间巡检", roleId: "15" },
-            { roleName: "开发厂家", roleId: "16" },
-          ],
+          roleList: [{ roleName: "模具主管", roleId: "0" }],
         },
         {
           serviceTeamId: "619453782060830720",
@@ -114,152 +65,65 @@ export default {
             { roleName: "内修主管", roleId: "1" },
           ],
         },
-      ];
-      const v = new DataSet({
-        title: "工单管理",
-        key: "new-mould-development",
-        type: "tabs",
-        webView: true,
-        navbar: {
-          rightIcon: "search",
-        },
+      ],
+    };
+  },
+  created() {
+    this.init();
+  },
+  // 组件方法
+  methods: {
+    init() {
+      this.value = new DataSet({
+        title: this.title,
+        type: "list",
         search: {
-          key: "mouldCode",
-          placeholder: "请输入模具编码",
+          key: "keyword",
+          placeholder: "请输入后查询",
           rightIcon: "scan",
         },
-        tabs: [
+        // queryParameter: {
+        //   authFlag: this.$route.query.authFlag,
+        // },
+        // list: {
+        //   title: 'partsName',
+        //   value: 'batchNumber',
+        //   label: [
+        //     [
+        //       [ '供应商', 'supplier' ],
+        //       [ '上传日期', 'lastUpdateDate' ],
+        //     ],
+        //   ],
+        //   showNumber: true,
+        //   click: (data)=>{
+        //     this.goDetail(data)
+        //   },
+        // },
+        // transport: {
+        //   read: ()=>{
+        //     return 'anti-counterfeit/v1/0/parts-batchs'
+        //   },
+        // },
+        btns: [
           {
-            title: "我的工单",
-            queryParameter: {
-              searchType: "mine",
-              queryType: "PDA",
-              method: 0,
+            text: "配件检验信息上传",
+            type: "info",
+            click: () => {
+              this.go("/bind-parts-batch-add");
             },
-            badge: true,
-          },
-          {
-            title: "公共池",
-            queryParameter: {
-              queryType: "PDA",
-              method: 1,
-            },
-            badge: true,
-          },
-          {
-            title: "内修",
-            queryParameter: {
-              queryType: "PDA",
-              inWorkshopFlag: 0,
-              searchType: "IN",
-            },
-            badge: true,
-          },
-          {
-            title: "外修",
-            queryParameter: {
-              queryType: "PDA",
-              inWorkshopFlag: 0,
-              searchType: "OUT",
-            },
-            badge: true,
-          },
-          {
-            title: "试模验收",
-            queryParameter: {
-              queryType: "PDA",
-              searchType: "try",
-            },
-            badge: true,
-          },
-        ],
-        list: {
-          title: "workOrderName",
-          value: "workOrderStatusMeaning",
-          label: [
-            ["mouldName", "mouldCategoryName"],
-            ["faultNatureMeaning", "workOrderNatureMeaning"],
-            [["申报人员:", "createdByName"], "lastUpdateDate"],
-          ],
-          showNumber: true,
-          click: (data) => {
-            const { workOrderId = "" } = data;
-            if (workOrderId === "") {
-              return false;
-            }
-            this.to(`/work-order/${workOrderId}`);
-          },
-        },
-        transport: {
-          read: "https://dev-gateway.vasen.com/mould-manage/v1/0/new-mould-developments",
-        },
-        queryFields: [
-          {
-            name: "serviceTeam",
-            label: "服务组织",
-            type: "single",
-            data,
-            textField: "serviceTeamName",
-            valueField: "serviceTeamId",
-            defaultValue: {
-              serviceTeamId: "604266362377998336",
-              serviceTeamName: "PPR管件一车间模具管理",
-            },
-            cache: true,
-          },
-          {
-            name: "serviceTeamId",
-            bind: "serviceTeam.serviceTeamId",
-          },
-          {
-            name: "serviceTeamName",
-            bind: "serviceTeam.serviceTeamName",
-          },
-          {
-            name: "roleObject",
-            label: "角色",
-            type: "single",
-            textField: "roleName",
-            valueField: "roleId",
-            cascades: { serviceTeamId: "serviceTeamId" },
-            data: (obj) => {
-              const { serviceTeamId: a } = obj;
-              const item = data.find(({ serviceTeamId: b }) => {
-                return a === b;
-              });
-              if (item) {
-                return item.roleList;
-              }
-              return [];
-            },
-            cache: true,
-          },
-          {
-            name: "role",
-            bind: "roleObject.roleId",
-          },
-          {
-            name: "roleName",
-            bind: "roleObject.roleName",
-          },
-          {
-            name: "aaa",
-            label: "aaa",
-            type: "single",
-            lovCode: "MOULD.MOULD",
-          },
-          {
-            name: "f",
-            label: "f",
-            cache: true,
           },
         ],
       });
-      this.value = v;
     },
-    unInit() {},
   },
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.red {
+  >>> .van-cell__title {
+    color: red;
+    background-color: red;
+  }
+}
+</style>

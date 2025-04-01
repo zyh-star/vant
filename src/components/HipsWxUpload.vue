@@ -282,8 +282,13 @@ export default {
     },
     deleteFileByUrl(params) {
       return instance.post(
-        `/${this.bucketName}/v1/#tenantId#/upload-files/delete-by-url`,
-        params
+        `/${this.bucketName}/v1/#tenantId#/upload-files`,
+        params.map((item) => {
+          return {
+            ...item,
+            deleteFlag: 1,
+          };
+        })
       );
     },
     onChange(index) {

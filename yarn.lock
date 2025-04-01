@@ -2011,6 +2011,11 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.15.tgz#596a1747233694d50f6ad8a7869fcb6f56cf5841"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
+"@types/lodash@^4.17.16":
+  version "4.17.16"
+  resolved "http://nexus-choerodon.vasen.com/repository/wx-npm-group/@types/lodash/-/lodash-4.17.16.tgz#94ae78fab4a38d73086e962d0b65c30d816bfb0a"
+  integrity sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g==
+
 "@types/mime@^1":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
@@ -4840,14 +4845,16 @@ highlight.js@^10.7.1:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.3.tgz#697272e3991356e40c3cac566a74eef681756531"
   integrity sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==
 
-hips-wx-utils@^0.1.8-beta13:
-  version "0.1.8-beta13"
-  resolved "http://nexus-choerodon.vasen.com/repository/wx-npm-group/hips-wx-utils/-/hips-wx-utils-0.1.8-beta13.tgz#af32d7fcb1c677653ed06b044eddce88a23c63cf"
-  integrity sha512-YSihto4KMm01EEin1cWylPoYDwJ5LP4vt+gJFmpz521xAHNf/EY2Q1P9j17M/SVbrzosBXzaW3X5KNNfa8aBiQ==
+hips-wx-utils@^0.1.8-beta63:
+  version "0.1.8-beta63"
+  resolved "http://nexus-choerodon.vasen.com/repository/wx-npm-group/hips-wx-utils/-/hips-wx-utils-0.1.8-beta63.tgz#698a1f322639fbe5b31aa96dc4de0537b3498722"
+  integrity sha512-qwYb8btndTQnbK1bd0JAw/+zE1LcRpgsL6SGeOzAKMEdFCtIJwMcAxfaO1tTkrmFKftGY3gXEfEqVPENXOIIMg==
   dependencies:
     "@hips/plugin-vue-jssdk" "^1.1.3"
+    "@types/lodash" "^4.17.16"
     axios "0.18.0"
     dingtalk-jsapi "^3.0.33"
+    lodash "^4.17.21"
     moment "^2.29.3"
     uuid "^3.4.0"
 
