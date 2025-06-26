@@ -65,6 +65,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "@/styles/variables.less";
 .first-card {
   justify-content: space-between;
   .van-cell__title:first-child {
@@ -80,20 +81,27 @@ export default {
   height: 0;
   border-bottom: 30px solid transparent;
 }
+
+.first-card::after {
+  border-bottom: none;
+}
 .primary > .first-card::before {
-  border-left: 30px solid #07c160; /* 根据需要设置颜色 */
+  border-left: 30px solid @success-color; /* 根据需要设置颜色 */
 }
 .danger > .first-card::before {
-  border-left: 30px solid #ee0a24; /* 根据需要设置颜色 */
+  border-left: 30px solid @error-color; /* 根据需要设置颜色 */
 }
 .info > .first-card::before {
-  border-left: 30px solid #1989fa; /* 根据需要设置颜色 */
+  border-left: 30px solid @info-color; /* 根据需要设置颜色 */
 }
 .warning > .first-card::before {
-  border-left: 30px solid #ff976a; /* 根据需要设置颜色 */
+  border-left: 30px solid @warning-color; /* 根据需要设置颜色 */
 }
 .yellow > .first-card::before {
-  border-left: 30px solid #ffff00; /* 根据需要设置颜色 */
+  border-left: 30px solid @yellow; /* 根据需要设置颜色 */
+}
+.red > .first-card::before {
+  border-left: 30px solid @red; /* 根据需要设置颜色 */
 }
 .van-cell + .van-cell {
   padding-top: 0;

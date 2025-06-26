@@ -42,6 +42,7 @@
           <hips-wx-card
             v-for="(item, index) in list"
             :key="index"
+            :value="showValueText(item)"
             :title="showTitle(item, index)"
             @click="toggleRadio(item)"
           >
@@ -218,16 +219,10 @@ export default {
   }
 }
 .query {
-  .van-form {
-    > div:first-child {
+  /deep/.query-form {
+    .fields {
       max-height: 25vh;
-      overflow-y: auto;
-    }
-    > div:last-child {
-      display: flex;
-      .van-button {
-        flex: 1;
-      }
+      overflow: auto;
     }
   }
 }

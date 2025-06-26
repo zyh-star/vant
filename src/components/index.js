@@ -13,6 +13,7 @@ import HipsWxRadio from "./HipsWxRadio.vue";
 import HipsWxDate from "./HipsWxDate.vue";
 import HipsWxView from "./HipsWxView.vue";
 import HipsWxSwipe from "./HipsWxSwipe.vue";
+import HipsWxSwipeCell from "./HipsWxSwipeCell.vue";
 import DataSet from "@/utils/dataSet";
 
 export {
@@ -28,5 +29,6 @@ export {
   HipsWxDate,
   HipsWxView,
   HipsWxSwipe,
+  HipsWxSwipeCell,
   DataSet,
 };

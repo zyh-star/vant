@@ -21,6 +21,7 @@
         :key="index"
       >
         <hips-wx-card v-if="fields.type === 'card'" v-bind="fields" />
+        <!-- 日期 -->
         <hips-wx-date
           v-else-if="fields.type === 'date'"
           v-bind="fields"
@@ -28,6 +29,63 @@
           :rules="getRules(fields)"
           :placeholder="getPlaceholder(fields)"
         />
+        <!-- 日期时间 -->
+        <hips-wx-date
+          v-else-if="fields.type === 'datetime'"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :rules="getRules(fields)"
+          :placeholder="getPlaceholder(fields)"
+          type="datetime"
+          formatter="yyyy-MM-dd hh:mm:ss"
+        />
+        <hips-wx-date
+          v-else-if="fields.type === 'time'"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :rules="getRules(fields)"
+          :placeholder="getPlaceholder(fields)"
+          type="time"
+          formatter="hh:mm:ss"
+        />
+        <!-- 值集 -->
+        <single-field
+          v-else-if="fields.type === 'select'"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :lookup-code="fields.sourceCode"
+          @confirm="(item) => getConfirm(item, fields)"
+        >
+          <template #fieldType="{ queryFields: querys }">
+            <field-type :value="querys" type="query" @submit="onSingle" />
+          </template>
+        </single-field>
+        <!-- 开关 -->
+        <van-field
+          v-else-if="fields.type === 'switch'"
+          v-bind="fields"
+          :rules="getRules(fields)"
+        >
+          <template #input>
+            <van-switch
+              v-model="info[fields.name]"
+              :active-value="1"
+              :inactive-value="0"
+            />
+          </template>
+        </van-field>
+        <!-- 值集视图 -->
+        <single-field
+          v-else-if="fields.type === 'lovCode'"
+          v-bind="fields"
+          v-model="info[fields.name]"
+          :lov-code="fields.sourceCode"
+          @confirm="(item) => getConfirm(item, fields)"
+        >
+          <template #fieldType="{ queryFields: querys }">
+            <field-type :value="querys" type="query" @submit="onSingle" />
+          </template>
+        </single-field>
         <single-field
           v-else-if="fields.type === 'single'"
           ref="single"
@@ -81,7 +139,7 @@
 </template>
 
 <script>
-import { Form, Field } from "vant";
+import { Form, Field, Switch } from "vant";
 // import {
 //   HipsWxSingle,
 //   HipsWxCard,
@@ -120,6 +178,7 @@ export default {
   components: {
     [Form.name]: Form,
     [Field.name]: Field,
+    [Switch.name]: Switch,
     [HipsWxCard.name]: HipsWxCard,
     [HipsWxRadio.name]: HipsWxRadio,
     [HipsWxUpload.name]: HipsWxUpload,
@@ -151,6 +210,9 @@ export default {
           case "TEXT":
             _type = "text";
             break;
+          case "INT":
+            _type = "number";
+            break;
           case "NUMBER":
             _type = "number";
             break;
@@ -162,6 +224,15 @@ export default {
             break;
           case "TIME":
             _type = "time";
+            break;
+          case "SELECT":
+            _type = "select";
+            break;
+          case "SWITCH":
+            _type = "switch";
+            break;
+          case "LOV_CODE":
+            _type = "lovCode";
             break;
           case "BOOLEAN":
             _type = "boolean";
@@ -208,7 +279,16 @@ export default {
   created() {
     const json = {};
     this._value.forEach((item) => {
-      const { field = "", name = field, value, defaultValue = value } = item;
+      let {
+        field = "",
+        name = field,
+        value = "",
+        defaultValue = value,
+        type,
+      } = item;
+      if (type === "switch") {
+        defaultValue = 0;
+      }
       if (name) {
         json[name] = defaultValue;
       }
@@ -235,12 +315,6 @@ export default {
   overflow-y: auto;
   max-height: calc(100vh - 46px);
   margin-top: calc(0 + env(safe-area-inset-top));
-}
-.query-form {
-  max-height: 20vh;
-}
-.has-btns {
-  // padding-bottom: 50px;
 }
 .no-btns {
   padding-bottom: 0px;

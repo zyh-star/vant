@@ -67,7 +67,6 @@ export default {
       default: false,
     },
   },
-  // mixins: [mixin],
   computed: {
     _value: {
       get() {

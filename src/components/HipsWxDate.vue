@@ -28,6 +28,7 @@
 import { Field, DatetimePicker, Popup } from "vant";
 import { dateFormat } from "hips-wx-utils";
 import HipsWxDateProps from "@/props/hips-wx-date";
+import _ from "lodash";
 
 export default {
   // 组件名称
@@ -50,7 +51,11 @@ export default {
   // 组件方法
   methods: {
     onConfirm(value) {
-      this.$emit("input", dateFormat(value, this.formatter));
+      if (_.isEmpty(value)) {
+        this.$emit("input", "");
+      } else {
+        this.$emit("input", dateFormat(value, this.formatter));
+      }
       this.hiddenDatetimePicker();
     },
     showDatetimePicker() {

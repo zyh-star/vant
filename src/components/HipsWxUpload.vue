@@ -56,10 +56,6 @@
 import { Uploader, Field, ImagePreview } from "vant";
 import { compressImage, base64ToBlob, instance, bridge } from "hips-wx-utils";
 
-// if (/[http|https]:\/\/front/.test(location.href)) {
-//   instance.defaults.baseURL = "https://gateway.vasen.com";
-// }
-
 export default {
   name: "HipsWxUpload",
   components: {

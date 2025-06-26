@@ -54,47 +54,24 @@ export default {
     onClickRight(e) {
       this.$emit("click-right", e);
     },
-    // initContentStyle() {
-    //   if (!document.querySelector(".hips-page")) return;
-
-    //   let height = document.querySelector(".hips-page").offsetHeight - 46;
-    //   if (this.$slots["footer"]) {
-    //     const footer = this.$refs.footer;
-    //     if (footer) {
-    //       height -= footer.offsetHeight || footer.firstChild?.offsetHeight || 0;
-    //     }
-    //   }
-    //   if (this.$refs.content && height > 0) {
-    //     this.$refs.content.style.height = `${height}px`;
-    //   }
-    // },
     onFocus(e) {
+      const target = e.target;
+      if (!["INPUT", "TEXTAREA"].includes(target.tagName)) {
+        return false;
+      }
+
       setTimeout(() => {
         e.target.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 200);
     },
   },
+
   mounted() {
-    this.$nextTick(() => {
-      // this.initContentStyle();
-      const inputs = document.querySelectorAll("input");
-      const textareas = document.querySelectorAll("textarea");
-      inputs.forEach((item) => item.addEventListener("focus", this.onFocus));
-      textareas.forEach((item) => item.addEventListener("focus", this.onFocus));
-    });
-  },
-  updated() {
-    this.$nextTick(() => {
-      // this.initContentStyle();
-    });
+    this.$el.addEventListener("focusin", this.onFocus);
   },
   beforeDestroy() {
-    const inputs = document.querySelectorAll("input");
-    const textareas = document.querySelectorAll("textarea");
-    inputs.forEach((item) => item.removeEventListener("focus", this.onFocus));
-    textareas.forEach((item) =>
-      item.removeEventListener("focus", this.onFocus)
-    );
+    // 移除事件监听（避免内存泄漏）
+    this.$el.removeEventListener("focusin", this.onFocus);
   },
 };
 </script>
@@ -104,19 +81,24 @@ export default {
 @height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 
 .hips-page {
+  // 防止某些机型不支持计算css  属性
+  height: 100vh;
+  width: 100vw;
   height: @height;
   width: @width;
+  display: flex;
+  flex-direction: column;
+  margin: 0; /* 避免默认 margin 影响 */
   .content {
+    flex: 1;
     overflow: auto;
-    height: 85vh;
-    height: calc(
-      100vh - 46px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
-    );
   }
   .footer {
     width: 100vw;
-    position: fixed;
-    bottom: 0;
+    display: flex;
+    .van-button {
+      flex: 1;
+    }
   }
 }
 </style>

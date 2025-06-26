@@ -14,27 +14,39 @@
       @click-right="navBarClickRight"
     />
     <query-list ref="queryList" :queryFields="queryFields" />
-    <div v-if="!load">
-      <div v-if="type === 'list'">
-        <data-list ref="dataList" :list="list" :height="height">
-          <template #default="{ value }">
-            <slot name="default" :value="value" />
-          </template>
-          <template #right="{ data: rightData }">
-            <slot name="right" :data="rightData" />
-          </template>
-        </data-list>
-      </div>
-      <div v-else-if="type === 'tabs'">
-        <tabs-list ref="tabList" :tabs="tabs" :height="height">
-          <template #default="{ value }">
-            <slot name="default" :value="value" />
-          </template>
-          <template #right="{ data: rightData }">
-            <slot name="right" :data="rightData" />
-          </template>
-        </tabs-list>
-      </div>
+    <div v-if="!load" class="content">
+      <data-list
+        v-if="type === 'list'"
+        ref="dataList"
+        :list="list"
+        :height="height"
+      >
+        <template #default="{ value }">
+          <slot name="default" :value="value" />
+        </template>
+        <template #left="{ data: leftData }">
+          <slot name="left" :data="leftData" />
+        </template>
+        <template #right="{ data: rightData }">
+          <slot name="right" :data="rightData" />
+        </template>
+      </data-list>
+      <tabs-list
+        v-else-if="type === 'tabs'"
+        ref="tabList"
+        :tabs="tabs"
+        :height="height"
+      >
+        <template #default="{ value }">
+          <slot name="default" :value="value" />
+        </template>
+        <template #left="{ data: leftData }">
+          <slot name="left" :data="leftData" />
+        </template>
+        <template #right="{ data: rightData }">
+          <slot name="right" :data="rightData" />
+        </template>
+      </tabs-list>
     </div>
   </div>
 </template>
@@ -167,70 +179,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+@height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 .right-icon-popup {
   width: 100%;
   margin-top: calc(0 + env(safe-area-inset-top));
 }
-/deep/.content {
-  > div.list {
-    height: 100%;
-    > div.van-pull-refresh {
-      height: 100%;
-      > div.van-pull-refresh__track {
-        > .van-list {
-          height: 100%;
-          background-color: rgba(240, 240, 240, 0.8); /* 浅灰且有一定透明度 */
-
-          .van-swipe-cell {
-            .van-button {
-              height: 100%;
-            }
-          }
-          > div + div {
-            margin-top: 2vw;
-          }
-        }
-      }
-    }
-  }
-  > div.tabs {
-    height: 100%;
-    > .van-tabs {
-      height: 100%;
-      > .van-tabs__content {
-        height: calc(100% - 44px);
-        > .van-tabs__track {
-          > .van-tab__pane-wrapper {
-            > .van-tab__pane {
-              height: 100%;
-              > div.van-pull-refresh {
-                height: 100%;
-                > div.van-pull-refresh__track {
-                  > .van-list {
-                    height: 100%;
-                    background-color: rgba(
-                      240,
-                      240,
-                      240,
-                      0.8
-                    ); /* 浅灰且有一定透明度 */
-                    .van-swipe-cell {
-                      .van-button {
-                        height: 100%;
-                      }
-                    }
-
-                    > div + div {
-                      margin-top: 2vw;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+.hips-page {
+  height: @height;
+  width: @width;
+  .content {
+    height: calc(@height - 46px);
   }
 }
 </style>

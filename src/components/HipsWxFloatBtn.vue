@@ -17,6 +17,7 @@
 
 <script>
 import { Icon } from "vant";
+import debounce from "lodash.debounce";
 
 export default {
   // 组件名称
@@ -70,9 +71,9 @@ export default {
       this.top = `${touch.clientY - height / 2}px`;
       this.left = `${touch.clientX - width / 2}px`;
     },
-    onClick() {
+    onClick: debounce(function () {
       this.$emit("click");
-    },
+    }, 200),
   },
   // 组件生成完毕后触发
   mounted() {

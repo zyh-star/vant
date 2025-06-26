@@ -6,28 +6,34 @@
 !-->
 <template>
   <!-- <hips-wx-view :data-set="value">
-    <template #default="{ value }">
-      <van-tag>{{ value }}</van-tag>
+    <template #left="{ data }">
+      <van-button size="large" type="info">
+        {{ data.mouldName }}
+      </van-button>
     </template>
-    <template #right> 1111 </template>
+    <template #right="{ data }">
+      <van-button size="large" type="info">
+        {{ data.mouldName }}
+      </van-button>
+    </template>
   </hips-wx-view> -->
-  <!-- <hips-wx-page title="111"> 111 </hips-wx-page> -->
-  <hips-wx-single
-    label="demo"
-    lov-url="anti-counterfeit/v1/0/parts-batchs"
-    textField="serviceTeamName"
-    valueField="serviceTeamId"
-    :querys="[{ label: 'aaa', name: 'sss' }]"
-  ></hips-wx-single>
+  <!-- <hips-wx-single lovCode="MOULD.DEMO"></hips-wx-single> -->
+  <hips-wx-page>
+    <hips-wx-card title="1" value="2" class="danger">
+      <template #label>3</template>
+    </hips-wx-card>
+  </hips-wx-page>
 </template>
 
 <script>
 /** ===== import ===== */
-import { Tag } from "vant";
+import { Tag, Button, Field } from "vant";
+import HipsWxCard from "./components/HipsWxCard.vue";
 import HipsWxView from "./components/HipsWxView.vue";
 import HipsWxPage from "./components/HipsWxPage.vue";
 import HipsWxSingle from "./components/HipsWxSingle.vue";
 import DataSet from "@/utils/dataSet.js";
+import { setCookie } from "hips-wx-utils";
 
 /** ===== import ===== */
 
@@ -36,10 +42,13 @@ export default {
   name: "DemoApp",
   /** ===== components ===== */
   components: {
+    [HipsWxCard.name]: HipsWxCard,
     [HipsWxView.name]: HipsWxView,
     [HipsWxPage.name]: HipsWxPage,
     [HipsWxSingle.name]: HipsWxSingle,
     [Tag.name]: Tag,
+    [Button.name]: Button,
+    [Field.name]: Field,
   },
   /** ===== components ===== */
   // 组件参数 接收来自父组件的数据
@@ -47,6 +56,9 @@ export default {
   // 组件状态值
   data() {
     return {
+      a: "",
+      b: "2",
+      show: false,
       value: null,
       singleData: [
         {
@@ -69,50 +81,118 @@ export default {
     };
   },
   created() {
-    this.init();
+    // this.init();
   },
   // 组件方法
   methods: {
     init() {
+      setCookie("access_token", "8a24f870-59e8-4155-89f0-7a735a09e229");
       this.value = new DataSet({
-        title: this.title,
-        type: "list",
-        search: {
-          key: "keyword",
-          placeholder: "请输入后查询",
-          rightIcon: "scan",
+        title: "保养任务",
+        type: "tabs",
+        key: "maintenance-task",
+        webView: true,
+        noCache: true,
+        navbar: {
+          rightIcon: "search",
         },
-        // queryParameter: {
-        //   authFlag: this.$route.query.authFlag,
-        // },
-        // list: {
-        //   title: 'partsName',
-        //   value: 'batchNumber',
-        //   label: [
-        //     [
-        //       [ '供应商', 'supplier' ],
-        //       [ '上传日期', 'lastUpdateDate' ],
-        //     ],
-        //   ],
-        //   showNumber: true,
-        //   click: (data)=>{
-        //     this.goDetail(data)
-        //   },
-        // },
-        // transport: {
-        //   read: ()=>{
-        //     return 'anti-counterfeit/v1/0/parts-batchs'
-        //   },
-        // },
-        btns: [
+        queryFields: [
           {
-            text: "配件检验信息上传",
-            type: "info",
-            click: () => {
-              this.go("/bind-parts-batch-add");
+            name: "mouldCode",
+            placeholder: "请输入模具编码",
+          },
+          {
+            name: "mouldCode1",
+            placeholder: "请输入模具编码",
+          },
+          {
+            name: "mouldCode2",
+            placeholder: "请输入模具编码",
+          },
+          {
+            name: "mouldCode3",
+            placeholder: "请输入模具编码",
+          },
+          {
+            name: "mouldCode4",
+            placeholder: "请输入模具编码",
+          },
+        ],
+        search: [
+          {
+            key: "mouldCode",
+            placeholder: "请输入模具编码",
+            rightIcon: "scan",
+          },
+          {
+            key: "mouldCode",
+            placeholder: "请输入模具编码",
+            rightIcon: "scan",
+          },
+        ],
+        tabs: [
+          {
+            title: "未开始",
+            queryParameter: {
+              maintenanceTaskStatus: "NEW",
+              queryType: "PDA",
+            },
+            badge: true,
+          },
+          {
+            title: "进行中",
+            queryParameter: {
+              maintenanceTaskStatus: "INPRG",
+              queryType: "PDA",
+            },
+            badge: true,
+          },
+          {
+            title: "已完成",
+            queryParameter: {
+              // maintenanceTaskStatus: 'COMPLETED',
+              queryType: "WLY",
             },
           },
         ],
+        list: {
+          title: "mouldName",
+          value: "maintenanceTaskStatusMeaning",
+          label: [
+            ["position", "stayWorkshopName"],
+            ["mouldCategoryName", "creationDate"],
+            ["materialName", "jtmc"],
+            ["maintenancePersonelName", "actualFinishTime"],
+            ["produceNeed", "taskCode"],
+          ],
+          showNumber: true,
+        },
+        transport: {
+          read: () => {
+            return "https://dev-gateway.vasen.com/asset-manage-new/v1/0/assets";
+          },
+        },
+        btns: [
+          {
+            text: "新建",
+            type: "info",
+            click: () => {},
+          },
+        ],
+        // search: {
+        //   key: "keyword",
+        //   placeholder: "请输入后查询",
+        //   rightIcon: "scan",
+        // },
+        // list: {
+        //   title: "mouldName",
+        //   value: "maintenanceTaskStatusMeaning",
+        // },
+        // transport: {
+        //   read: () => {
+        //     return "https://dev-gateway.vasen.com/mould-manage/v1/0/maintenance-tasks";
+        //   },
+        // },
       });
     },
   },
@@ -120,10 +200,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.red {
-  >>> .van-cell__title {
-    color: red;
-    background-color: red;
-  }
-}
+// .van-button {
+//   height: 100%;
+// }
 </style>
