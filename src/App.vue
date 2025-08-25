@@ -18,11 +18,52 @@
     </template>
   </hips-wx-view> -->
   <!-- <hips-wx-single lovCode="MOULD.DEMO"></hips-wx-single> -->
-  <hips-wx-page>
+  <!-- <hips-wx-page>
     <hips-wx-card title="1" value="2" class="danger">
       <template #label>3</template>
     </hips-wx-card>
-  </hips-wx-page>
+  </hips-wx-page> -->
+  <hips-wx-view :data-set="ds">
+    <template #left="{ data }">
+      <van-button
+        v-if="phone === data.outUserId"
+        square
+        type="info"
+        text="提交"
+        @click="onSubmit(data)"
+      />
+      <van-button
+        v-if="createBy === data.createBy"
+        square
+        type="danger"
+        text="删除"
+        @click="onDelete(data)"
+      />
+      <van-button
+        v-if="employeeNum === data.operator"
+        square
+        type="info"
+        text="通过"
+        @click="onPass(data)"
+      />
+    </template>
+  </hips-wx-view>
+  <!-- <hips-wx-date
+    v-model="expectedDeliveryTime"
+    label="预计交期"
+    :readonly="readonly"
+    :required="required"
+    :rules="[
+      {
+        required: required,
+        message: '请选择预计交期',
+        trigger: 'change',
+      },
+    ]"
+    type="datetime"
+    label-width="100"
+    input-align="right"
+  /> -->
 </template>
 
 <script>
@@ -32,6 +73,7 @@ import HipsWxCard from "./components/HipsWxCard.vue";
 import HipsWxView from "./components/HipsWxView.vue";
 import HipsWxPage from "./components/HipsWxPage.vue";
 import HipsWxSingle from "./components/HipsWxSingle.vue";
+import HipsWxDate from "./components/HipsWxDate.vue";
 import DataSet from "@/utils/dataSet.js";
 import { setCookie } from "hips-wx-utils";
 
@@ -46,6 +88,7 @@ export default {
     [HipsWxView.name]: HipsWxView,
     [HipsWxPage.name]: HipsWxPage,
     [HipsWxSingle.name]: HipsWxSingle,
+    [HipsWxDate.name]: HipsWxDate,
     [Tag.name]: Tag,
     [Button.name]: Button,
     [Field.name]: Field,
@@ -56,144 +99,84 @@ export default {
   // 组件状态值
   data() {
     return {
-      a: "",
-      b: "2",
-      show: false,
-      value: null,
-      singleData: [
-        {
-          serviceTeamId: "604266362377998336",
-          serviceTeamName: "PPR管件一车间模具管理",
-          defaultFlag: 0,
-          roleList: [{ roleName: "模具主管", roleId: "0" }],
-        },
-        {
-          serviceTeamId: "619453782060830720",
-          serviceTeamName: "PPR管道车间模具管理",
-          defaultFlag: 0,
-          roleList: [
-            { roleName: "模具管理员", roleId: "3" },
-            { roleName: "模具主管", roleId: "0" },
-            { roleName: "内修主管", roleId: "1" },
-          ],
-        },
-      ],
+      expectedDeliveryTime: "",
+      required: true,
+      readonly: false,
+      ds: null,
     };
   },
   created() {
-    // this.init();
+    this.init();
   },
   // 组件方法
   methods: {
     init() {
-      setCookie("access_token", "8a24f870-59e8-4155-89f0-7a735a09e229");
-      this.value = new DataSet({
-        title: "保养任务",
+      setCookie("access_token", "2f9196ef-a21f-4346-8bbb-fb9ea2adf25c");
+      this.ds = new DataSet({
+        title: "委外维修",
         type: "tabs",
-        key: "maintenance-task",
-        webView: true,
-        noCache: true,
-        navbar: {
-          rightIcon: "search",
+        search: {
+          key: "workOrderName",
         },
-        queryFields: [
-          {
-            name: "mouldCode",
-            placeholder: "请输入模具编码",
-          },
-          {
-            name: "mouldCode1",
-            placeholder: "请输入模具编码",
-          },
-          {
-            name: "mouldCode2",
-            placeholder: "请输入模具编码",
-          },
-          {
-            name: "mouldCode3",
-            placeholder: "请输入模具编码",
-          },
-          {
-            name: "mouldCode4",
-            placeholder: "请输入模具编码",
-          },
-        ],
-        search: [
-          {
-            key: "mouldCode",
-            placeholder: "请输入模具编码",
-            rightIcon: "scan",
-          },
-          {
-            key: "mouldCode",
-            placeholder: "请输入模具编码",
-            rightIcon: "scan",
-          },
-        ],
         tabs: [
           {
-            title: "未开始",
-            queryParameter: {
-              maintenanceTaskStatus: "NEW",
-              queryType: "PDA",
-            },
+            title: "待提交",
             badge: true,
+            queryParameter: {
+              outCompany: this.outCompany,
+              workOrderStatus: "APPROVED",
+            },
           },
           {
-            title: "进行中",
-            queryParameter: {
-              maintenanceTaskStatus: "INPRG",
-              queryType: "PDA",
-            },
+            title: "待审核",
             badge: true,
+            queryParameter: {
+              outCompany: this.outCompany,
+              workOrderStatus: "COMPLETED",
+              checkStatus: 0,
+            },
           },
           {
-            title: "已完成",
+            title: "已审核",
             queryParameter: {
-              // maintenanceTaskStatus: 'COMPLETED',
-              queryType: "WLY",
+              outCompany: this.outCompany,
+              workOrderStatus: "COMPLETED",
+              checkStatus: 2,
             },
           },
         ],
-        list: {
-          title: "mouldName",
-          value: "maintenanceTaskStatusMeaning",
-          label: [
-            ["position", "stayWorkshopName"],
-            ["mouldCategoryName", "creationDate"],
-            ["materialName", "jtmc"],
-            ["maintenancePersonelName", "actualFinishTime"],
-            ["produceNeed", "taskCode"],
-          ],
-          showNumber: true,
-        },
         transport: {
-          read: () => {
-            return "https://dev-gateway.vasen.com/asset-manage-new/v1/0/assets";
-          },
+          read: "https://dev-gateway.vasen.com/asset-manage-new/v1/#tenantId#/work-orders",
         },
-        btns: [
-          {
-            text: "新建",
-            type: "info",
-            click: () => {},
+        list: {
+          title: "sparePartsName",
+          value: (item) => {
+            console.log("🚀 ~ init ~ item:", item);
+            return "sparePartsCode";
           },
-        ],
-        // search: {
-        //   key: "keyword",
-        //   placeholder: "请输入后查询",
-        //   rightIcon: "scan",
-        // },
-        // list: {
-        //   title: "mouldName",
-        //   value: "maintenanceTaskStatusMeaning",
-        // },
-        // transport: {
-        //   read: () => {
-        //     return "https://dev-gateway.vasen.com/mould-manage/v1/0/maintenance-tasks";
-        //   },
-        // },
+          label: [
+            [
+              (obj) => `库房:${obj.storageRoomName}`,
+              (obj) => `库位:${obj.storageLocationName}`,
+            ],
+            ["model", "sparePartsCategoryMeaning"],
+            [(obj) => `库存数量:${obj.stockQuantity}`],
+            [
+              (obj) => `库存上限:${obj.inventoryUl}`,
+              (obj) => `库存下限:${obj.inventoryLl}`,
+            ],
+          ],
+        },
       });
+    },
+    onSubmit(data) {
+      console.log("🚀 ~ onSubmit ~ data:", data);
+    },
+    onDelete(data) {
+      console.log("🚀 ~ onDelete ~ data:", data);
+    },
+    onPass(data) {
+      console.log("🚀 ~ onPass ~ data:", data);
     },
   },
 };

@@ -20,6 +20,7 @@
         ref="dataList"
         :list="list"
         :height="height"
+        @search-right-icon-click="onSearchRightIconClick"
       >
         <template #default="{ value }">
           <slot name="default" :value="value" />
@@ -38,7 +39,7 @@
         :height="height"
       >
         <template #default="{ value }">
-          <slot name="default" :value="value" />
+          <slot name="default" :value="value" :data="data" />
         </template>
         <template #left="{ data: leftData }">
           <slot name="left" :data="leftData" />
@@ -167,6 +168,9 @@ export default {
         this.queryFields.toggle();
       }
       this.$emit("nav-bar-click-right", event);
+    },
+    onSearchRightIconClick(event) {
+      this.$emit("search-right-icon-click", event);
     },
     // onSearch(value) {
     //   this.$emit("search", value);

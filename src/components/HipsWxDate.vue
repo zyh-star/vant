@@ -1,24 +1,27 @@
-<!--
-* @description 时间控件
-* @fileName HipsWxDate.vue
-* @author zheng yuanhou
-* @date 2024/07/05 09:18:30
-!-->
 <template>
-  <div>
+  <div class="date">
     <van-field
-      v-bind="$attrs"
+      v-model="_value"
+      :name="name"
+      :label="label"
+      :label-width="labelWidth"
       :placeholder="placeholder"
       :input-align="inputAlign"
+      :disabled="disabled"
+      :required="required"
+      :rules="rules"
+      readonly
       @click="showDatetimePicker"
     />
     <van-popup v-model="showPicker" position="bottom">
       <van-datetime-picker
         v-model="currentDate"
+        v-bind="$attrs"
         :type="type"
+        :readonly="readonly"
         cancel-button-text="重置"
         @confirm="onConfirm"
-        @cancel="onConfirm('')"
+        @cancel="onCancel"
       />
     </van-popup>
   </div>
@@ -26,39 +29,117 @@
 
 <script>
 import { Field, DatetimePicker, Popup } from "vant";
-import { dateFormat } from "hips-wx-utils";
-import HipsWxDateProps from "@/props/hips-wx-date";
-import _ from "lodash";
+import dayjs from "dayjs";
 
 export default {
-  // 组件名称
-  name: "HipsWxDate",
-  // 局部注册的组件
+  name: "hips-wx-date",
   components: {
     [Field.name]: Field,
     [DatetimePicker.name]: DatetimePicker,
     [Popup.name]: Popup,
   },
-  // 组件参数 接收来自父组件的数据
-  props: HipsWxDateProps,
-  // 组件状态值
+
+  props: {
+    value: {
+      type: [String, Number],
+      default: "",
+    },
+    name: {
+      type: String,
+      default: "",
+    },
+    placeholder: {
+      type: String,
+      default: "点击选择时间",
+    },
+    inputAlign: {
+      type: String,
+      default: "right",
+    },
+    label: {
+      type: String,
+      default: "",
+    },
+    labelWidth: {
+      type: [String, Number],
+      default: "6.2em",
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    rules: {
+      type: Array,
+      default: () => [],
+    },
+    type: {
+      type: String,
+      default: "date",
+    },
+  },
   data() {
     return {
       showPicker: false,
       currentDate: new Date(this.value || new Date()),
     };
   },
-  // 组件方法
+  computed: {
+    _value: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit("input", value);
+      },
+    },
+  },
   methods: {
     onConfirm(value) {
-      if (_.isEmpty(value)) {
-        this.$emit("input", "");
-      } else {
-        this.$emit("input", dateFormat(value, this.formatter));
+      let dateValue = "";
+      switch (this.type) {
+        case "date":
+          dateValue = dayjs(value).format("YYYY-MM-DD");
+          break;
+        case "year-month":
+          dateValue = dayjs(value).format("YYYY-MM");
+          break;
+        case "month-day":
+          dateValue = dayjs(value).format("MM-DD");
+          break;
+        case "time":
+          dateValue = dayjs(value).format("HH:mm:ss");
+          break;
+        case "datetime":
+          dateValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
+          break;
+        case "datehour":
+          dateValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
+          break;
+        default:
+          break;
       }
+      this._value = dateValue;
+      this.hiddenDatetimePicker();
+    },
+    onCancel() {
+      this.$emit("input", "");
       this.hiddenDatetimePicker();
     },
     showDatetimePicker() {
+      if (this.readonly) {
+        return false;
+      }
+      if (this.disabled) {
+        return false;
+      }
       this.showPicker = true;
     },
     hiddenDatetimePicker() {
@@ -68,4 +149,8 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less">
+.van-cell::after {
+  border: none;
+}
+</style>

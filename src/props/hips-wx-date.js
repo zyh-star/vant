@@ -15,4 +15,8 @@ export default {
     type: String,
     default: "right",
   },
+  value: {
+    type: [String, Date],
+    default: "",
+  },
 };
