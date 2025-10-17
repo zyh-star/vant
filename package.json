@@ -1,7 +1,7 @@
 {
   "name": "hips-wx-components",
-  "version": "0.1.15-beta16",
-  "description": "新增判断是否需要重新加载",
+  "version": "0.1.15-beta17",
+  "description": "lookupCode 直接结束",
   "main": "dist/index.umd.js",
   "style": "dist/index.css",
   "scripts": {
