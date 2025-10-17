@@ -23,31 +23,7 @@
       <template #label>3</template>
     </hips-wx-card>
   </hips-wx-page> -->
-  <hips-wx-view :data-set="ds">
-    <template #left="{ data }">
-      <van-button
-        v-if="phone === data.outUserId"
-        square
-        type="info"
-        text="提交"
-        @click="onSubmit(data)"
-      />
-      <van-button
-        v-if="createBy === data.createBy"
-        square
-        type="danger"
-        text="删除"
-        @click="onDelete(data)"
-      />
-      <van-button
-        v-if="employeeNum === data.operator"
-        square
-        type="info"
-        text="通过"
-        @click="onPass(data)"
-      />
-    </template>
-  </hips-wx-view>
+  <hips-wx-view :data-set="ds"> </hips-wx-view>
   <!-- <hips-wx-date
     v-model="expectedDeliveryTime"
     label="预计交期"
@@ -64,6 +40,19 @@
     label-width="100"
     input-align="right"
   /> -->
+  <!-- <hips-wx-search-to-list
+    title="ssdfg"
+    :queryFields="queryFields"
+    :loading="loading"
+    :finished="finished"
+    :options="options"
+    @refresh="onRefresh"
+    @load="onLoad"
+  >
+    <template #list-footer>
+      <van-button>1</van-button>
+    </template>
+  </hips-wx-search-to-list> -->
 </template>
 
 <script>
@@ -74,6 +63,7 @@ import HipsWxView from "./components/HipsWxView.vue";
 import HipsWxPage from "./components/HipsWxPage.vue";
 import HipsWxSingle from "./components/HipsWxSingle.vue";
 import HipsWxDate from "./components/HipsWxDate.vue";
+import HipsWxSearchToList from "./components/hips-wx-search-to-list";
 import DataSet from "@/utils/dataSet.js";
 import { setCookie } from "hips-wx-utils";
 
@@ -92,6 +82,7 @@ export default {
     [Tag.name]: Tag,
     [Button.name]: Button,
     [Field.name]: Field,
+    [HipsWxSearchToList.name]: HipsWxSearchToList,
   },
   /** ===== components ===== */
   // 组件参数 接收来自父组件的数据
@@ -103,6 +94,33 @@ export default {
       required: true,
       readonly: false,
       ds: null,
+      queryFields: [
+        {
+          name: "workOrderName",
+          placeholder: "请输入工单名称",
+          label: "aaa",
+          inputAlign: "right",
+          value: "",
+        },
+        {
+          name: "date",
+          type: "datetime",
+          placeholder: "请选择预计交期",
+          label: "预计交期",
+        },
+        {
+          name: "mouldCode",
+          value: "",
+          meaning: "",
+          placeholder: "请选择资产编号",
+          label: "资产编号",
+          lovCode: "MOULD.MOULD",
+          type: "single",
+        },
+      ],
+      loading: false,
+      finished: false,
+      options: [],
     };
   },
   created() {
@@ -110,74 +128,308 @@ export default {
   },
   // 组件方法
   methods: {
+    $t(v) {
+      return v;
+    },
+    onRefresh() {
+      this.page = 0;
+      this.options = [];
+    },
+    onLoad(props) {
+      console.log("🚀 ~ onLoad ~ props:", props);
+      this.loading = true;
+      setTimeout(() => {
+        for (let i = 0; i < 10; i++) {
+          this.options.push(i);
+        }
+        this.loading = false;
+        this.finished = this.options.length >= 50;
+      }, 1000);
+    },
     init() {
-      setCookie("access_token", "2f9196ef-a21f-4346-8bbb-fb9ea2adf25c");
+      setCookie("access_token", "a40a004e-92b2-4226-bede-c2a9c3ef9ba8");
       this.ds = new DataSet({
-        title: "委外维修",
+        title: "维修单管理",
         type: "tabs",
-        search: {
-          key: "workOrderName",
-        },
+        rightText: "",
+        search: [
+          {
+            name: "workOrderName",
+            placeholder: "请输入工单名称",
+          },
+          {
+            name: "asset",
+            placeholder: "请输入资产",
+            onSearch(value = "") {
+              const matchs = value.match(/^(.{4})-(\d{1,20})/);
+
+              if (matchs) {
+                const assetCode = matchs[2] ?? "";
+                const sapCompanyCode = matchs[1] ?? "";
+                return {
+                  assetCode,
+                  sapCompanyCode,
+                };
+              }
+              return "";
+            },
+          },
+        ],
+        queryFields: [],
         tabs: [
           {
-            title: "待提交",
+            title: this.$t("公共池"),
             badge: true,
             queryParameter: {
-              outCompany: this.outCompany,
-              workOrderStatus: "APPROVED",
+              method: 4,
+            },
+            list: {
+              title: (item) => {
+                const { problem, workOrderName } = item;
+                if (problem) {
+                  return `${workOrderName}(问题描述:'${problem})`;
+                }
+                return workOrderName;
+              },
+              value: (item) => {
+                const { workOrderBackReason = "", waitTime = 0 } = item;
+                if (workOrderBackReason !== "") {
+                  return this.$t("退回");
+                }
+                const m = Number(waitTime) % 60;
+                let h = Math.floor(Number(waitTime) / 60);
+                const day = Math.floor(h / 24);
+                h = h % 24;
+                return `${day > 0 ? `${day}${this.$t("天")}` : ""}${
+                  h > 0 ? `${h}${this.$t("时")}` : ""
+                }${m}${this.$t("分")}`;
+              },
+              label: [
+                ["workOrderCode"],
+                [
+                  (item) => {
+                    const {
+                      productionLineName = "",
+                      assetName = "",
+                      assetCode = "",
+                    } = item;
+                    return `${productionLineName}-${assetName}-${assetCode}`;
+                  },
+                ],
+              ],
+              tagProps: (item) => {
+                const { waitTime = 0 } = item;
+                if (waitTime > 30) {
+                  return { type: "danger" };
+                }
+                return "primary";
+              },
+              click: ({ workOrderId }) => {
+                this.$router.push({
+                  path: `/work-order-claim-detail/4/${workOrderId}`,
+                });
+              },
             },
           },
           {
-            title: "待审核",
+            title: this.$t("我的工单"),
             badge: true,
             queryParameter: {
-              outCompany: this.outCompany,
-              workOrderStatus: "COMPLETED",
-              checkStatus: 0,
+              method: 0,
+            },
+            list: {
+              title: (item) => {
+                const { problem, workOrderName } = item;
+                if (problem) {
+                  return `${workOrderName}(问题描述:'${problem})`;
+                }
+                return workOrderName;
+              },
+              value: (item) => {
+                const {
+                  workOrderBackReason = "",
+                  // actualStartTime = "",
+                  workOrderStatusMeaning = "",
+                } = item;
+                if (workOrderBackReason !== "") {
+                  return this.$t("退回");
+                }
+                // if (isEmpty(actualStartTime)) {
+                //   return this.$t("未开始");
+                // }
+                return this.$t(workOrderStatusMeaning);
+              },
+              label: [
+                ["workOrderCode"],
+                [
+                  (item) => {
+                    const {
+                      productionLineName = "",
+                      assetName = "",
+                      assetCode = "",
+                    } = item;
+                    return `${productionLineName}-${assetName}-${assetCode}`;
+                  },
+                ],
+              ],
+              tagProps: (item) => {
+                const { workOrderBackReason = "" } = item;
+                if (workOrderBackReason !== "") {
+                  return { type: "danger" };
+                }
+                return "primary";
+              },
+              click: (item) => {
+                const { workOrderId = "" } = item;
+                this.$router.push({
+                  path: `/work-order/${workOrderId}/0/${this.getTagType(
+                    item,
+                    0
+                  )}`,
+                });
+              },
             },
           },
           {
-            title: "已审核",
+            title: this.$t("待审"),
+            badge: true,
             queryParameter: {
-              outCompany: this.outCompany,
-              workOrderStatus: "COMPLETED",
-              checkStatus: 2,
+              method: 1,
+            },
+            list: {
+              title: (item) => {
+                const { problem, workOrderName } = item;
+                if (problem) {
+                  return `${workOrderName}(问题描述:'${problem})`;
+                }
+                return workOrderName;
+              },
+              value: () => {
+                return "111";
+                // return workOrderTypeIsOneStatus(item).meaning;
+              },
+              label: [
+                ["workOrderCode"],
+                [
+                  (item) => {
+                    const {
+                      productionLineName = "",
+                      assetName = "",
+                      assetCode = "",
+                    } = item;
+                    return `${productionLineName}-${assetName}-${assetCode}`;
+                  },
+                ],
+              ],
+              tagProps: () => {
+                // return workOrderTypeIsOneStatus(item).tag;
+                return "222";
+              },
+              click: (item) => {
+                const { workOrderId = "" } = item;
+                this.$router.push({
+                  path: `/work-order/${workOrderId}/1/${this.getTagType(
+                    item,
+                    1
+                  )}`,
+                });
+              },
+            },
+          },
+          {
+            title: this.$t("已完成"),
+            queryParameter: {
+              method: 2,
+            },
+            list: {
+              title: (item) => {
+                const { problem, workOrderName } = item;
+                if (problem) {
+                  return `${workOrderName}(问题描述:'${problem})`;
+                }
+                return workOrderName;
+              },
+              value: (item) => {
+                const { workOrderStatusMeaning = "" } = item;
+                return this.$t(workOrderStatusMeaning);
+              },
+              label: [
+                ["workOrderCode"],
+                [
+                  (item) => {
+                    const {
+                      productionLineName = "",
+                      assetName = "",
+                      assetCode = "",
+                    } = item;
+                    return `${productionLineName}-${assetName}-${assetCode}`;
+                  },
+                ],
+              ],
+              click: (item) => {
+                const { workOrderId = "" } = item;
+                this.$router.push({
+                  path: `/work-order/${workOrderId}/2/${this.getTagType(
+                    item,
+                    2
+                  )}`,
+                });
+              },
+            },
+          },
+          {
+            title: this.$t("已审"),
+            queryParameter: {
+              method: 3,
+            },
+            list: {
+              title: (item) => {
+                const { problem, workOrderName } = item;
+                if (problem) {
+                  return `${workOrderName}(问题描述:'${problem})`;
+                }
+                return workOrderName;
+              },
+              value: (item) => {
+                const { workOrderStatus = "", checkStatusMeaning = "" } = item;
+                if (workOrderStatus === "COMPLETED") {
+                  return this.$t(checkStatusMeaning) + `(${this.$t("未评分")})`;
+                }
+                return this.$t(checkStatusMeaning);
+              },
+              label: [
+                ["workOrderCode"],
+                [
+                  (item) => {
+                    const {
+                      productionLineName = "",
+                      assetName = "",
+                      assetCode = "",
+                    } = item;
+                    return `${productionLineName}-${assetName}-${assetCode}`;
+                  },
+                ],
+              ],
+              click: (item) => {
+                const { workOrderId = "" } = item;
+                this.$router.push({
+                  path: `/work-order/${workOrderId}/3/${this.getTagType(
+                    item,
+                    3
+                  )}`,
+                });
+              },
             },
           },
         ],
         transport: {
-          read: "https://dev-gateway.vasen.com/asset-manage-new/v1/#tenantId#/work-orders",
-        },
-        list: {
-          title: "sparePartsName",
-          value: (item) => {
-            console.log("🚀 ~ init ~ item:", item);
-            return "sparePartsCode";
-          },
-          label: [
-            [
-              (obj) => `库房:${obj.storageRoomName}`,
-              (obj) => `库位:${obj.storageLocationName}`,
-            ],
-            ["model", "sparePartsCategoryMeaning"],
-            [(obj) => `库存数量:${obj.stockQuantity}`],
-            [
-              (obj) => `库存上限:${obj.inventoryUl}`,
-              (obj) => `库存下限:${obj.inventoryLl}`,
-            ],
-          ],
+          read: `https://dev-gateway.vasen.com/asset-manage-new/v1/#tenantId#/work-orders`,
         },
       });
     },
-    onSubmit(data) {
-      console.log("🚀 ~ onSubmit ~ data:", data);
-    },
-    onDelete(data) {
-      console.log("🚀 ~ onDelete ~ data:", data);
-    },
-    onPass(data) {
-      console.log("🚀 ~ onPass ~ data:", data);
-    },
+    // onSubmit(data) {},
+    // onDelete(data) {},
+    // onPass(data) {},
   },
 };
 </script>

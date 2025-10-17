@@ -84,6 +84,9 @@ export default {
       type: String,
       default: "date",
     },
+    formatter: {
+      type: [String, Function, undefined],
+    },
   },
   data() {
     return {
@@ -102,26 +105,35 @@ export default {
     },
   },
   methods: {
+    _formatter(value, formatter) {
+      if (typeof this.formatter === "function") {
+        return this.formatter(value);
+      } else if (typeof this.formatter === "string") {
+        return value.format(this.formatter ?? formatter);
+      } else {
+        return value.format(formatter);
+      }
+    },
     onConfirm(value) {
       let dateValue = "";
       switch (this.type) {
         case "date":
-          dateValue = dayjs(value).format("YYYY-MM-DD");
+          dateValue = this._formatter(dayjs(value), "YYYY-MM-DD");
           break;
         case "year-month":
-          dateValue = dayjs(value).format("YYYY-MM");
+          dateValue = this._formatter(dayjs(value), "YYYY-MM");
           break;
         case "month-day":
-          dateValue = dayjs(value).format("MM-DD");
+          dateValue = this._formatter(dayjs(value), "MM-DD");
           break;
         case "time":
-          dateValue = dayjs(value).format("HH:mm:ss");
+          dateValue = this._formatter(dayjs(value), "HH:mm:ss");
           break;
         case "datetime":
-          dateValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
+          dateValue = this._formatter(dayjs(value), "YYYY-MM-DD HH:mm:ss");
           break;
         case "datehour":
-          dateValue = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
+          dateValue = this._formatter(dayjs(value), "YYYY-MM-DD HH:mm:ss");
           break;
         default:
           break;

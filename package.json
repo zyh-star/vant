@@ -1,7 +1,7 @@
 {
   "name": "hips-wx-components",
-  "version": "0.1.14-beta73",
-  "description": "修复查询按钮不查询问题",
+  "version": "0.1.15-beta16",
+  "description": "新增判断是否需要重新加载",
   "main": "dist/index.umd.js",
   "style": "dist/index.css",
   "scripts": {

@@ -22,14 +22,14 @@
         :height="height"
         @search-right-icon-click="onSearchRightIconClick"
       >
-        <template #default="{ value }">
-          <slot name="default" :value="value" />
+        <template #default="{ value, list: listData }">
+          <slot name="default" :value="value" :list="listData" />
         </template>
-        <template #left="{ data: leftData }">
-          <slot name="left" :data="leftData" />
+        <template #left="{ data: leftData, list: listData }">
+          <slot name="left" :data="leftData" :list="listData" />
         </template>
-        <template #right="{ data: rightData }">
-          <slot name="right" :data="rightData" />
+        <template #right="{ data: rightData, list: listData }">
+          <slot name="right" :data="rightData" :list="listData" />
         </template>
       </data-list>
       <tabs-list
@@ -38,14 +38,14 @@
         :tabs="tabs"
         :height="height"
       >
-        <template #default="{ value }">
-          <slot name="default" :value="value" :data="data" />
+        <template #default="{ value, list: listData }">
+          <slot name="default" :value="value" :list="listData" />
         </template>
-        <template #left="{ data: leftData }">
-          <slot name="left" :data="leftData" />
+        <template #left="{ data: leftData, list: listData }">
+          <slot name="left" :data="leftData" :list="listData" />
         </template>
-        <template #right="{ data: rightData }">
-          <slot name="right" :data="rightData" />
+        <template #right="{ data: rightData, list: listData }">
+          <slot name="right" :data="rightData" :list="listData" />
         </template>
       </tabs-list>
     </div>
