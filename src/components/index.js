@@ -12,9 +12,9 @@ import HipsWxUpload from "./HipsWxUpload.vue";
 import HipsWxRadio from "./HipsWxRadio.vue";
 import HipsWxDate from "./HipsWxDate.vue";
 import HipsWxView from "./HipsWxView.vue";
-import HipsWxSwipe from "./HipsWxSwipe.vue";
-import HipsWxSwipeCell from "./HipsWxSwipeCell.vue";
-import HipsWxSearchToList from "./hips-wx-search-to-list";
+import HipsWxSwipe from "./hips-wx-swipe/index.vue";
+import HipsWxSwipeCell from "./hips-wx-swipe-cell/index.vue";
+import HipsWxSearchToList from "./hips-wx-search-to-list/index.vue";
 import DataSet from "@/utils/dataSet";
 
 export {

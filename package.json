@@ -1,6 +1,6 @@
 {
   "name": "hips-wx-components",
-  "version": "0.1.15-beta17",
+  "version": "0.1.15-beta22",
   "description": "lookupCode 直接结束",
   "main": "dist/index.umd.js",
   "style": "dist/index.css",
@@ -8,7 +8,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name index src/components/index.js",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "publish": "npm publish"
   },
   "dependencies": {
     "core-js": "^3.8.3",
