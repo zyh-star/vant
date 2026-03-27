@@ -1,6 +1,6 @@
 {
   "name": "vant-wx",
-  "version": "2.13.9",
+  "version": "1.0.0",
   "description": "Mobile UI Components built on Vue",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -16,7 +16,7 @@
     "tag": "latest-v2"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "http://nexus-choerodon.vasen.com/repository/wx-npm-hosted/"
   },
   "scripts": {
     "bootstrap": "yarn || npm i",
@@ -27,7 +27,9 @@
     "release": "vant-cli release --tag latest-v2",
     "test:watch": "vant-cli test --watch",
     "release:site": "sh docs/site/release.sh",
-    "test:coverage": "open test/coverage/index.html"
+    "test:coverage": "open test/coverage/index.html",
+    "build:site": "vant-cli build-site",
+    "pub": "node scripts/pub-with-version.js"
   },
   "husky": {
     "hooks": {

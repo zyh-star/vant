@@ -28,6 +28,7 @@ const RadioDropdown = createComponent({
   name: 'RadioDropdown',
   props: {
     // Field 组件相关属性
+    name: String,
     label: String,
     placeholder: {
       type: String,
@@ -75,6 +76,8 @@ const RadioDropdown = createComponent({
     readonly: Boolean,
     // 是否必填
     required: Boolean,
+    // 表单校验规则
+    rules: Array,
     // 是否开启下拉刷新
     pullRefresh: {
       type: Boolean,
@@ -519,12 +522,14 @@ const RadioDropdown = createComponent({
     genField() {
       return (
         <Field
+          name={this.name}
           label={this.label}
           placeholder={this.placeholder}
           value={this.displayValue}
           readonly
           disabled={this.disabled}
           required={this.required}
+          rules={this.rules}
           isLink
           inputAlign={this.inputAlign}
           onClick={this.onFieldClick}

@@ -13,6 +13,7 @@ const DatePickerField = createComponent({
 
   props: {
     // Field 组件相关属性
+    name: String,
     label: String,
     placeholder: {
       type: String,
@@ -34,6 +35,8 @@ const DatePickerField = createComponent({
     readonly: Boolean,
     // 是否必填
     required: Boolean,
+    // 表单校验规则
+    rules: Array,
     // 输入框对齐方式
     inputAlign: {
       type: String,
@@ -154,12 +157,14 @@ const DatePickerField = createComponent({
     genField() {
       return (
         <Field
+          name={this.name}
           label={this.label}
           placeholder={this.placeholder}
           value={this.displayValue}
           readonly
           disabled={this.disabled}
           required={this.required}
+          rules={this.rules}
           isLink
           inputAlign={this.inputAlign}
           onClick={this.onFieldClick}

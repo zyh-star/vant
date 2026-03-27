@@ -165,6 +165,7 @@ Enable pull-to-refresh and pagination for URL and LOV data sources.
 
 | Attribute | Description | Type | Default |
 | --- | --- | --- | --- |
+| name | Field name, used for form identification | _string_ | - |
 | label | Field label | _string_ | - |
 | placeholder | Placeholder text | _string_ | `'Please select'` |
 | value | Current selected value | _string \| number_ | `''` |
@@ -178,6 +179,7 @@ Enable pull-to-refresh and pagination for URL and LOV data sources.
 | disabled | Whether to disable the component | _boolean_ | `false` |
 | readonly | Whether to set readonly | _boolean_ | `false` |
 | required | Whether to show required mark | _boolean_ | `false` |
+| rules | Form validation rules | _Array_ | - |
 | input-align | Input text alignment | _string_ | `'right'` |
 | pull-refresh | Enable pull-to-refresh | _boolean_ | `true` |
 | pagination | Enable pagination | _boolean_ | `true` |

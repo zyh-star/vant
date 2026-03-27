@@ -80,12 +80,14 @@ export default {
 | Attribute | Description | Type | Default |
 | --- | --- | --- | --- |
 | v-model | Current selected datetime, format is `YYYY-MM-dd HH:mm:ss` | _string_ | - |
+| name | Field name, used for form identification | _string_ | - |
 | label | Left side label of the input field | _string_ | - |
 | placeholder | Placeholder text of the input field | _string_ | `Please select` |
 | type | Picker type, can be set to `date` `datetime` | _string_ | `date` |
 | disabled | Whether to disable the input field | _boolean_ | `false` |
 | readonly | Whether to make the input field read-only | _boolean_ | `false` |
 | required | Whether to show the required asterisk | _boolean_ | `false` |
+| rules | Form validation rules | _Array_ | - |
 | input-align | Input field alignment, can be set to `center` `right` | _string_ | `right` |
 | min-date | Minimum selectable date | _Date_ | Ten years ago |
 | max-date | Maximum selectable date | _Date_ | Ten years later |

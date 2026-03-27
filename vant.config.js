@@ -3,7 +3,8 @@ module.exports = {
   build: {
     skipInstall: ['lazyload'],
     site: {
-      publicPath: process.env.PUBLIC_PATH || '/vant/v2',
+      // publicPath: process.env.PUBLIC_PATH || '/vant/v2',
+      publicPath: process.env.PUBLIC_PATH || './',
     },
     vetur: {
       tagPrefix: 'van-',
@@ -181,6 +182,10 @@ module.exports = {
               {
                 path: 'date-picker-field',
                 title: 'DatePickerField 日期选择字段',
+              },
+              {
+                path: 'field-uploader',
+                title: 'FieldUploader 文件上传字段',
               },
               {
                 path: 'rate',
@@ -575,6 +580,10 @@ module.exports = {
               {
                 path: 'date-picker-field',
                 title: 'DatePickerField',
+              },
+              {
+                path: 'field-uploader',
+                title: 'FieldUploader',
               },
               {
                 path: 'rate',

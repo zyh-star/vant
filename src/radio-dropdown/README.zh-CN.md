@@ -156,6 +156,7 @@ export default {
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
+| name | 字段名称，用于表单识别 | _string_ | - |
 | label | 字段标签 | _string_ | - |
 | placeholder | 占位提示文字 | _string_ | `'请选择'` |
 | value | 当前选中的值 | _string \| number_ | `''` |

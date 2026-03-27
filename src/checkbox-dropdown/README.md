@@ -156,6 +156,7 @@ Use the `lookup-code` prop to fetch data using Lookup configuration.
 
 | Attribute | Description | Type | Default |
 | --- | --- | --- | --- |
+| name | Field name, used for form identification | _string_ | - |
 | label | Field label | _string_ | - |
 | placeholder | Placeholder text | _string_ | `'Please select'` |
 | value | Current selected values | _Array_ | `[]` |
@@ -169,6 +170,7 @@ Use the `lookup-code` prop to fetch data using Lookup configuration.
 | disabled | Whether to disable the component | _boolean_ | `false` |
 | readonly | Whether to set readonly | _boolean_ | `false` |
 | required | Whether to show required mark | _boolean_ | `false` |
+| rules | Form validation rules | _Array_ | - |
 | pull-refresh | Whether to enable pull-to-refresh | _boolean_ | `true` |
 | pagination | Whether to enable pagination | _boolean_ | `true` |
 | page-size | Number of items per page | _number_ | `10` |

@@ -80,6 +80,7 @@ export default {
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | v-model | 当前选中的日期时间，格式为 `YYYY-MM-dd HH:mm:ss` | _string_ | - |
+| name | 字段名称，用于表单识别 | _string_ | - |
 | label | 输入框左侧文本 | _string_ | - |
 | placeholder | 输入框占位提示文字 | _string_ | `请选择` |
 | type | 选择器类型，可选值为 `date` `datetime` | _string_ | `date` |
