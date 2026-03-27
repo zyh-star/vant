@@ -17,9 +17,11 @@ import { ImagePreview } from './image-preview';
 import { IndexBar } from './index-bar';
 import { Lazyload } from './lazyload';
 import { List } from './list';
+import { CheckboxDropdown } from './checkbox-dropdown';
 import { Locale } from './locale';
 import { Notify } from './notify';
 import { Page } from './page';
+import { RadioDropdown } from './radio-dropdown';
 import { Picker } from './picker';
 import { Progress } from './progress';
 import { Sku } from './sku';
@@ -100,6 +102,7 @@ export {
   Area,
   Calendar,
   Checkbox,
+  CheckboxDropdown,
   CheckboxGroup,
   CollapseItem,
   CountDown,
@@ -117,6 +120,7 @@ export {
   Page,
   Picker,
   Progress,
+  RadioDropdown,
   Sku,
   Swipe,
   SwipeCell,

@@ -2,14 +2,10 @@
 
 ## Install
 
-### npm
+### yarn
 
 ```bash
-# Install latest Vant for Vue 3 project
-npm i vant -S
-
-# Install Vant 2 for Vue 2 project
-npm i vant@latest-v2 -S
+yarn add vant@latest --registry http://nexus-choerodon.vasen.com/repository/wx-npm-group
 ```
 
 ### Scaffold
@@ -83,7 +79,7 @@ vue create hello-world
 vue ui
 ```
 
-![](https://img01.yzcdn.cn/vant/vue-cli-demo-201809030812.png)
+!\[]\(https\://img01.yzcdn.cn/vant/vue-cli-demo-201809030812.png null)
 
 In the GUI, click on 'Dependencies' -> `Install Dependencies` and add `vant` to the dependencies.
 

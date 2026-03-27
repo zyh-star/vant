@@ -1,0 +1,161 @@
+@import '../style/var';
+
+.van-checkbox-dropdown {
+  position: relative;
+
+  &__overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  &__popup-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+
+    > .van-popup {
+      pointer-events: auto;
+    }
+  }
+
+  &__search-popup {
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+    max-height: 25vh;
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
+    background-color: @white;
+  }
+
+  &__search-header {
+    flex-shrink: 0;
+    padding: @padding-md;
+    color: @text-color;
+    font-weight: @font-weight-bold;
+    font-size: @font-size-lg;
+    text-align: center;
+    border-bottom: 1px solid @border-color;
+  }
+
+  &__search-fields {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &__search-actions {
+    display: flex;
+    flex-shrink: 0;
+    background-color: @white;
+    border-top: 1px solid @border-color;
+  }
+
+  &__search-btn {
+    flex: 1;
+  }
+
+  &__list-popup {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: @background-color;
+  }
+
+  &__list-content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .van-checkbox-group {
+      padding: @padding-xs 0;
+    }
+
+    .van-cell {
+      background-color: @white;
+
+      &:active {
+        background-color: @active-color;
+      }
+    }
+
+    .van-checkbox {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  &__list-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: @padding-sm;
+    align-items: center;
+    justify-content: flex-end;
+    padding: @padding-sm @padding-md;
+    background-color: @white;
+    border-top: 1px solid @border-color;
+  }
+
+  &__list-btn {
+    min-width: 72px;
+  }
+
+  &__selected-tags {
+    flex-shrink: 0;
+    padding: @padding-sm @padding-md;
+    background-color: @white;
+    border-top: 1px solid @border-color;
+  }
+
+  &__selected-tags-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: @padding-xs;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__selected-tag {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  &__sub-labels {
+    margin-top: 4px;
+
+    &--inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .van-checkbox-dropdown__sub-label-item {
+        flex: 0 0 calc(50% - 4px);
+        color: @gray-6;
+        font-size: @font-size-sm;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  &__sub-label {
+    color: @gray-6;
+    font-size: @font-size-sm;
+    line-height: 1.4;
+
+    &--new-line {
+      margin-top: 2px;
+    }
+  }
+}

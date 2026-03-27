@@ -6,16 +6,12 @@
 
 ## 安装
 
-### 通过 npm 安装
+### 通过 yarn 安装
 
 在现有项目中使用 Vant 时，可以通过 `npm` 或 `yarn` 进行安装：
 
 ```bash
-# Vue 3 项目，安装最新版 Vant：
-npm i vant -S
-
-# Vue 2 项目，安装 Vant 2：
-npm i vant@latest-v2 -S
+yarn add vant@latest --registry http://nexus-choerodon.vasen.com/repository/wx-npm-group
 ```
 
 ### 脚手架
@@ -90,7 +86,7 @@ vue create hello-world
 vue ui
 ```
 
-![](https://img01.yzcdn.cn/vant/vue-cli-demo-201809032000.png)
+!\[]\(https\://img01.yzcdn.cn/vant/vue-cli-demo-201809032000.png null)
 
 在图形化界面中，点击 `依赖` -> `安装依赖`，然后将 `vant` 添加到依赖中即可。
 

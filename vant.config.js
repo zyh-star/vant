@@ -171,6 +171,18 @@ module.exports = {
                 title: 'Radio 单选框',
               },
               {
+                path: 'radio-dropdown',
+                title: 'RadioDropdown 单选下拉',
+              },
+              {
+                path: 'checkbox-dropdown',
+                title: 'CheckboxDropdown 复选下拉',
+              },
+              {
+                path: 'date-picker-field',
+                title: 'DatePickerField 日期选择字段',
+              },
+              {
                 path: 'rate',
                 title: 'Rate 评分',
               },
@@ -555,6 +567,14 @@ module.exports = {
               {
                 path: 'radio',
                 title: 'Radio',
+              },
+              {
+                path: 'radio-dropdown',
+                title: 'RadioDropdown',
+              },
+              {
+                path: 'date-picker-field',
+                title: 'DatePickerField',
               },
               {
                 path: 'rate',
