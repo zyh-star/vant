@@ -150,6 +150,28 @@ export default {
 />
 ```
 
+### 扫码功能
+
+通过 `show-scan` 属性启用扫码功能，点击 scan 图标或输入内容后失焦可自动查询数据。
+
+```html
+<van-checkbox-dropdown
+  v-model="value"
+  label="扫码选择"
+  lov-code="MOULD.MOULD"
+  show-scan
+  scan-field="mouldCode"
+  placeholder="请扫码或选择"
+/>
+```
+
+**扫码功能说明：**
+
+1. 点击 scan 图标调用扫码功能，扫描成功后自动查询
+2. 手动输入内容后失焦（blur），如果值有变化也会自动查询
+3. 查询结果只有一条时自动选中，多条时弹出选择框
+4. 可通过 `scan-field` 自定义查询字段名，默认使用 `value-key` 或 LOV 配置的 valueField
+
 ## API
 
 ### Props
@@ -177,6 +199,8 @@ export default {
 | z-index-offset | 层级偏移（用于嵌套弹窗） | _number_ | `0` |
 | query-fields | 查询字段配置，用于自定义搜索栏 | _Array_ | `[{ field: 'meaning', label: '名称', dataType: 'TEXT' }]` |
 | sub-label-key | 选项辅助标签配置，支持数组格式 | _Array_ | `[]` |
+| show-scan | 是否显示扫码图标 | _boolean_ | `false` |
+| scan-field | 扫码查询字段名，如果不传则按数据源类型默认逻辑处理 | _string_ | - |
 
 ### Events
 

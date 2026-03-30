@@ -13,6 +13,8 @@ import CellGroup from '../cell-group';
 import PullRefresh from '../pull-refresh';
 import Overlay from '../overlay';
 import DatePickerField from '../date-picker-field';
+import Icon from '../icon';
+import { bridge, instance } from 'hips-wx-utils';
 
 const [createComponent, bem] = createNamespace('radio-dropdown');
 
@@ -108,6 +110,16 @@ const RadioDropdown = createComponent({
       type: Array,
       default: () => [{ field: 'meaning', label: '名称', dataType: 'TEXT' }],
     },
+    // 是否显示扫码图标
+    showScan: {
+      type: Boolean,
+      default: false,
+    },
+    // 扫码查询字段名，如果不传则按数据源类型默认逻辑处理
+    scanField: {
+      type: String,
+      default: '',
+    },
   },
 
   data() {
@@ -136,6 +148,10 @@ const RadioDropdown = createComponent({
       currentDataSource: '',
       // Overlay 元素引用
       overlayRef: null,
+      // input聚焦状态，用于blur时判断是否需要查询
+      inputFocused: false,
+      // input聚焦时的值，用于blur时判断值是否变化
+      inputFocusValue: '',
     };
   },
 
@@ -239,7 +255,6 @@ const RadioDropdown = createComponent({
       this.loading = true;
 
       try {
-        const { instance } = await import('hips-wx-utils');
         const requestParams = {
           ...params,
           page: isRefresh ? 0 : this.page,
@@ -263,7 +278,6 @@ const RadioDropdown = createComponent({
     // 获取LOV配置
     async fetchLovConfig() {
       try {
-        const { instance } = await import('hips-wx-utils');
         const url = `/hpfm/v1/#tenantId#/lov-view/info?viewCode=${this.lovCode}`;
 
         const response = await instance.get(url);
@@ -291,7 +305,6 @@ const RadioDropdown = createComponent({
       this.loading = true;
 
       try {
-        const { instance } = await import('hips-wx-utils');
         let url = this.lovConfig.queryUrl;
         url = url.replace('{organizationId}', '#tenantId#');
 
@@ -323,7 +336,6 @@ const RadioDropdown = createComponent({
       this.loading = true;
 
       try {
-        const { instance } = await import('hips-wx-utils');
         const url = `/hpfm/v1/#tenantId#/lovs/value/batch?${this.lookupCode}=${this.lookupCode}`;
 
         const response = await instance.get(url);
@@ -519,31 +531,144 @@ const RadioDropdown = createComponent({
       this.showPopup = false;
     },
 
+    // 处理扫码
+    async handleScan() {
+      try {
+        const scanCode = await bridge.scan();
+        await this.queryByScanCode(scanCode);
+      } catch (error) {
+        this.$toast.fail(error);
+      }
+    },
+
+    // 处理input blur事件
+    async handleInputBlur() {
+      // 如果inputFocused为true且值有变化，则调用查询函数
+      if (this.inputFocused && this.displayValue !== this.inputFocusValue) {
+        await this.queryByScanCode(this.displayValue);
+      }
+      // 重置状态
+      this.inputFocused = false;
+      this.inputFocusValue = '';
+    },
+
+    // 根据扫码结果查询数据
+    async queryByScanCode(scanCode) {
+      // 优先使用自定义的 scanField，如果没有则根据数据源类型确定使用的 key
+      const queryKey = this.scanField
+        ? this.scanField
+        : this.currentDataSource === DATA_SOURCE_TYPE.LOV_CODE
+        ? this.lovConfig.valueField || this.valueKey
+        : this.valueKey;
+
+      const params = {
+        [queryKey]: scanCode,
+      };
+
+      switch (this.currentDataSource) {
+        case DATA_SOURCE_TYPE.URL:
+          // URL数据源：使用scanCode作为查询条件请求数据
+          await this.fetchUrlData(params, true);
+          this.checkAndSelectSingleResult();
+          break;
+        case DATA_SOURCE_TYPE.LOV_CODE:
+          // LOV_CODE数据源：使用scanCode作为查询条件请求数据
+          await this.fetchLovListData(params, true);
+          this.checkAndSelectSingleResult();
+          break;
+        case DATA_SOURCE_TYPE.LOOKUP_CODE:
+          // LOOKUP_CODE数据源：本地筛选
+          this.filteredOptions = this.getCurrentOptions().filter((item) => {
+            return String(item[queryKey] || '')
+              .toLowerCase()
+              .includes(String(scanCode).toLowerCase());
+          });
+          this.checkAndSelectSingleResult();
+          break;
+        case DATA_SOURCE_TYPE.OPTIONS:
+          // OPTIONS数据源：本地筛选
+          this.filteredOptions = this.options.filter((item) => {
+            return String(item[queryKey] || '')
+              .toLowerCase()
+              .includes(String(scanCode).toLowerCase());
+          });
+          this.checkAndSelectSingleResult();
+          break;
+      }
+    },
+
+    // 检查结果长度是否为1，是则默认选中
+    checkAndSelectSingleResult() {
+      // 使用 filteredOptions 而不是 getCurrentOptions()，因为筛选后的结果存储在 filteredOptions 中
+      const options = this.filteredOptions;
+      if (options.length === 1) {
+        const value = options[0][this.currentValueKey];
+        this.internalValue = value;
+        this.$emit('input', this.internalValue);
+        this.$emit('confirm', options[0]);
+      } else {
+        // 结果不为1，打开弹窗显示选项
+        this.showPopup = true;
+      }
+    },
+
     genField() {
-      return (
-        <Field
-          name={this.name}
-          label={this.label}
-          placeholder={this.placeholder}
-          value={this.displayValue}
-          readonly
-          disabled={this.disabled}
-          required={this.required}
-          rules={this.rules}
-          isLink
-          inputAlign={this.inputAlign}
-          onClick={this.onFieldClick}
-        />
-      );
+      const fieldProps = {
+        props: {
+          name: this.name,
+          label: this.label,
+          placeholder: this.placeholder,
+          value: this.displayValue,
+          readonly: !this.showScan,
+          disabled: this.disabled,
+          required: this.required,
+          rules: this.rules,
+          isLink: true,
+          inputAlign: this.inputAlign,
+        },
+        on: {
+          click: this.onFieldClick,
+          'click-input': (event) => {
+            if (this.showScan) {
+              event.stopPropagation();
+            }
+            // 记录input聚焦状态和当前值
+            this.inputFocused = true;
+            this.inputFocusValue = this.displayValue;
+          },
+          blur: () => {
+            this.handleInputBlur();
+          },
+        },
+        scopedSlots: this.showScan
+          ? {
+              'right-icon': () => (
+                <Icon
+                  name="scan"
+                  size={24}
+                  color="#07c160"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    this.handleScan();
+                  }}
+                />
+              ),
+            }
+          : {},
+      };
+
+      return <Field {...fieldProps} />;
     },
 
     genSearchFields() {
-      // 优先从 props 获取 queryFields，否则从 LOV 配置获取
+      // 优先从 LOV 配置获取（如果是 LOV_CODE 数据源且有配置），否则从 props 获取 queryFields
       const fields =
-        this.queryFields && this.queryFields.length > 0
-          ? this.queryFields
-          : this.currentDataSource === DATA_SOURCE_TYPE.LOV_CODE
+        this.currentDataSource === DATA_SOURCE_TYPE.LOV_CODE &&
+        this.lovConfig.queryFields &&
+        this.lovConfig.queryFields.length > 0
           ? this.lovConfig.queryFields
+          : this.queryFields && this.queryFields.length > 0
+          ? this.queryFields
           : [];
 
       return fields.map((field) => {

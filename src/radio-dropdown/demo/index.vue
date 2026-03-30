@@ -68,6 +68,7 @@
         label="Lookup选择"
         lookup-code="COMMON.YESORNO"
         placeholder="请选择"
+        show-scan
       />
     </demo-block>
   </demo-section>

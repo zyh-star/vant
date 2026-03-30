@@ -11,7 +11,7 @@
 在现有项目中使用 Vant 时，可以通过 `npm` 或 `yarn` 进行安装：
 
 ```bash
-yarn add vant@latest --registry http://nexus-choerodon.vasen.com/repository/wx-npm-group
+yarn add vant-wx@latest --registry http://nexus-choerodon.vasen.com/repository/wx-npm-group
 ```
 
 ### 脚手架

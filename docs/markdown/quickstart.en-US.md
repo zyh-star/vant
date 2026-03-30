@@ -5,7 +5,7 @@
 ### yarn
 
 ```bash
-yarn add vant@latest --registry http://nexus-choerodon.vasen.com/repository/wx-npm-group
+yarn add vant-wx@latest --registry http://nexus-choerodon.vasen.com/repository/wx-npm-group
 ```
 
 ### Scaffold

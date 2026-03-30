@@ -29,6 +29,7 @@
     "release:site": "sh docs/site/release.sh",
     "test:coverage": "open test/coverage/index.html",
     "build:site": "vant-cli build-site",
+    "build:site:copy": "node scripts/build-site-and-copy.js",
     "pub": "node scripts/pub-with-version.js"
   },
   "husky": {

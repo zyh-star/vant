@@ -55,9 +55,11 @@
     <demo-block title="LovCode数据源">
       <van-checkbox-dropdown
         v-model="value6"
+        show-scan
         label="LovCode选择"
         lov-code="MOULD.MOULD"
         placeholder="请选择"
+        scan-field="mouldCode"
       />
     </demo-block>
 
@@ -67,6 +69,17 @@
         label="Lookup选择"
         lookup-code="COMMON.YESORNO"
         placeholder="请选择"
+      />
+    </demo-block>
+
+    <demo-block title="显示扫码图标">
+      <van-checkbox-dropdown
+        v-model="value7"
+        label="扫码选择"
+        :options="cityOptions"
+        show-scan
+        placeholder="请扫码或选择"
+        @confirm="onConfirm"
       />
     </demo-block>
   </demo-section>
@@ -139,6 +152,7 @@ export default {
       value4: [],
       value5: [],
       value6: [],
+      value7: [],
       cityOptions,
       skillOptions,
       productOptions,
