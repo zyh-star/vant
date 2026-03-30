@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Cascader } from 'vant';
+import { Cascader } from 'vant-wx';
 
 Vue.use(Cascader);
 ```

@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { RadioGroup, Radio } from 'vant';
+import { RadioGroup, Radio } from 'vant-wx';
 
 Vue.use(Radio);
 Vue.use(RadioGroup);

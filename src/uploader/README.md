@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Uploader } from 'vant';
+import { Uploader } from 'vant-wx';
 
 Vue.use(Uploader);
 ```
@@ -104,7 +104,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -123,7 +123,7 @@ If you need to make different size limits for different types of files, you can 
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -174,7 +174,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -217,7 +217,7 @@ Use `disabled` prop to disable uploader.
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

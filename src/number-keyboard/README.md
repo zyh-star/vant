@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { NumberKeyboard } from 'vant';
+import { NumberKeyboard } from 'vant-wx';
 
 Vue.use(NumberKeyboard);
 ```
@@ -24,7 +24,7 @@ Vue.use(NumberKeyboard);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Popup } from 'vant';
+import { Popup } from 'vant-wx';
 
 Vue.use(Popup);
 ```

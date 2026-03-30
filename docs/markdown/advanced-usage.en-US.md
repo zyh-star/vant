@@ -14,7 +14,7 @@ Vant supports multiple ways to register components:
 
 ```js
 import Vue from 'vue';
-import { Button } from 'vant';
+import { Button } from 'vant-wx';
 
 // Method 1. via Vue.use
 Vue.use(Button);

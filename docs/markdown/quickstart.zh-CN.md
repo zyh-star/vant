@@ -121,7 +121,7 @@ npm i babel-plugin-import -D
 {
   "plugins": [
     ["import", {
-      "libraryName": "vant",
+      "libraryName": "vant-wx",
       "libraryDirectory": "es",
       "style": true
     }]
@@ -132,10 +132,10 @@ npm i babel-plugin-import -D
 module.exports = {
   plugins: [
     ['import', {
-      libraryName: 'vant',
+      libraryName: 'vant-wx',
       libraryDirectory: 'es',
       style: true
-    }, 'vant']
+    }, 'vant-wx']
   ]
 };
 ```
@@ -143,7 +143,7 @@ module.exports = {
 ```js
 // 接着你可以在代码中直接引入 Vant 组件
 // 插件会自动将代码转化为方式二中的按需引入形式
-import { Button } from 'vant';
+import { Button } from 'vant-wx';
 ```
 
 > Tips: 如果你在使用 TypeScript，可以使用 [ts-import-plugin](https://github.com/Brooooooklyn/ts-import-plugin) 实现按需引入。
@@ -163,7 +163,7 @@ Vant 支持一次性导入所有组件，引入所有组件会增加代码包体
 
 ```js
 import Vue from 'vue';
-import Vant from 'vant';
+import Vant from 'vant-wx';
 import 'vant/lib/index.css';
 
 Vue.use(Vant);

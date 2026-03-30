@@ -100,7 +100,7 @@ npm i babel-plugin-import -D
 {
   "plugins": [
     ["import", {
-      "libraryName": "vant",
+      "libraryName": "vant-wx",
       "libraryDirectory": "es",
       "style": true
     }]
@@ -111,17 +111,17 @@ npm i babel-plugin-import -D
 module.exports = {
   plugins: [
     ['import', {
-      libraryName: 'vant',
+      libraryName: 'vant-wx',
       libraryDirectory: 'es',
       style: true
-    }, 'vant']
+    }, 'vant-wx']
   ]
 };
 ```
 
 ```js
 // Then you can import components from vant
-import { Button } from 'vant';
+import { Button } from 'vant-wx';
 ```
 
 > If you are using TypeScript，please use [ts-import-plugin](https://github.com/Brooooooklyn/ts-import-plugin) instead.
@@ -137,7 +137,7 @@ import 'vant/lib/button/style';
 
 ```js
 import Vue from 'vue';
-import Vant from 'vant';
+import Vant from 'vant-wx';
 import 'vant/lib/index.css';
 
 Vue.use(Vant);

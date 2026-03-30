@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Page } from 'vant';
+import { Page } from 'vant-wx';
 
 Vue.use(Page);
 ```
@@ -34,7 +34,7 @@ Page 组件是一个页面布局容器，包含导航栏、内容区和底部区
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {

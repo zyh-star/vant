@@ -8,7 +8,7 @@ A date picker component based on Field + Popup + DatetimePicker, supporting both
 
 ```js
 import Vue from 'vue';
-import { DatePickerField } from 'vant';
+import { DatePickerField } from 'vant-wx';
 
 Vue.use(DatePickerField);
 ```

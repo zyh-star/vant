@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant';
+import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant-wx';
 
 Vue.use(GoodsAction);
 Vue.use(GoodsActionButton);
@@ -29,7 +29,7 @@ Vue.use(GoodsActionIcon);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {

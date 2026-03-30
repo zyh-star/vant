@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { AddressEdit } from 'vant';
+import { AddressEdit } from 'vant-wx';
 
 Vue.use(AddressEdit);
 ```
@@ -33,7 +33,7 @@ Vue.use(AddressEdit);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

@@ -95,12 +95,12 @@ module.exports = {
     [
       'import',
       {
-        libraryName: 'vant',
+        libraryName: 'vant-wx',
         libraryDirectory: 'es',
         // specify less file path
         style: (name) => `${name}/style/less`,
       },
-      'vant',
+      'vant-wx',
     ],
   ],
 };

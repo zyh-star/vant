@@ -8,8 +8,8 @@ Used for data entry and verification, and supports input boxes, radio buttons, c
 
 ```js
 import Vue from 'vue';
-import { Form } from 'vant';
-import { Field } from 'vant';
+import { Form } from 'vant-wx';
+import { Field } from 'vant-wx';
 
 Vue.use(Form);
 Vue.use(Field);
@@ -91,7 +91,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

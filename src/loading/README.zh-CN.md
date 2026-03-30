@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Loading } from 'vant';
+import { Loading } from 'vant-wx';
 
 Vue.use(Loading);
 ```

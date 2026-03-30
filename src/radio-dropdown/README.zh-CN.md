@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { RadioDropdown } from 'vant';
+import { RadioDropdown } from 'vant-wx';
 
 Vue.use(RadioDropdown);
 ```

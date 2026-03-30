@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Step, Steps } from 'vant';
+import { Step, Steps } from 'vant-wx';
 
 Vue.use(Step);
 Vue.use(Steps);

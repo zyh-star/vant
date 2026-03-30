@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { List } from 'vant';
+import { List } from 'vant-wx';
 
 Vue.use(List);
 ```
@@ -196,11 +196,11 @@ export default {
 
 组件提供了下列 Less 变量，可用于自定义样式，使用方法请参考[主题定制](#/zh-CN/theme)。
 
-| 名称                    | 默认值          | 描述 |
-| ----------------------- | --------------- | ---- |
-| @list-text-color        | `@gray-6`       | -    |
-| @list-text-font-size    | `@font-size-md` | -    |
-| @list-text-line-height  | `50px`          | -    |
+| 名称                   | 默认值          | 描述 |
+| ---------------------- | --------------- | ---- |
+| @list-text-color       | `@gray-6`       | -    |
+| @list-text-font-size   | `@font-size-md` | -    |
+| @list-text-line-height | `50px`          | -    |
 
 ## 常见问题
 

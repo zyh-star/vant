@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Image as VanImage } from 'vant';
+import { Image as VanImage } from 'vant-wx';
 
 Vue.use(VanImage);
 ```
@@ -58,7 +58,7 @@ Show round image, it may not works at `fit=contain` and `fit=scale-down`.
 
 ```js
 import Vue from 'vue';
-import { Lazyload } from 'vant';
+import { Lazyload } from 'vant-wx';
 
 Vue.use(Lazyload);
 ```

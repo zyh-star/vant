@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Circle } from 'vant';
+import { Circle } from 'vant-wx';
 
 Vue.use(Circle);
 ```

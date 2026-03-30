@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Pagination } from 'vant';
+import { Pagination } from 'vant-wx';
 
 Vue.use(Pagination);
 ```

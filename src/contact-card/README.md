@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { ContactCard } from 'vant';
+import { ContactCard } from 'vant-wx';
 
 Vue.use(ContactCard);
 ```
@@ -18,7 +18,7 @@ Vue.use(ContactCard);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -41,7 +41,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

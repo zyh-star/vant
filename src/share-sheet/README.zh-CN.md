@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { ShareSheet } from 'vant';
+import { ShareSheet } from 'vant-wx';
 
 Vue.use(ShareSheet);
 ```
@@ -30,7 +30,7 @@ Vue.use(ShareSheet);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

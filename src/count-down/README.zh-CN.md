@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { CountDown } from 'vant';
+import { CountDown } from 'vant-wx';
 
 Vue.use(CountDown);
 ```
@@ -102,7 +102,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {

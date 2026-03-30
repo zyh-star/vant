@@ -8,7 +8,7 @@ Calendar component for selecting dates or date ranges.
 
 ```js
 import Vue from 'vue';
-import { Calendar } from 'vant';
+import { Calendar } from 'vant-wx';
 
 Vue.use(Calendar);
 ```

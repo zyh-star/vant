@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Panel } from 'vant';
+import { Panel } from 'vant-wx';
 
 Vue.use(Panel);
 ```

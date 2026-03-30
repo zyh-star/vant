@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Collapse, CollapseItem } from 'vant';
+import { Collapse, CollapseItem } from 'vant-wx';
 
 Vue.use(Collapse);
 Vue.use(CollapseItem);

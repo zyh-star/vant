@@ -13,7 +13,7 @@ A file upload component based on Field + Uploader, supporting image compression,
 
 ```js
 import Vue from 'vue';
-import { FieldUploader } from 'vant';
+import { FieldUploader } from 'vant-wx';
 
 Vue.use(FieldUploader);
 ```

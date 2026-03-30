@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { ContactList } from 'vant';
+import { ContactList } from 'vant-wx';
 
 Vue.use(ContactList);
 ```
@@ -29,7 +29,7 @@ Vue.use(ContactList);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Checkbox, CheckboxGroup } from 'vant';
+import { Checkbox, CheckboxGroup } from 'vant-wx';
 
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);

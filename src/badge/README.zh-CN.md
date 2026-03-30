@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Badge } from 'vant';
+import { Badge } from 'vant-wx';
 
 Vue.use(Badge);
 ```

@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Search } from 'vant';
+import { Search } from 'vant-wx';
 
 Vue.use(Search);
 ```
@@ -44,7 +44,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Skeleton } from 'vant';
+import { Skeleton } from 'vant-wx';
 
 Vue.use(Skeleton);
 ```

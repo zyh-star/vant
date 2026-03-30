@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Popover } from 'vant';
+import { Popover } from 'vant-wx';
 
 Vue.use(Popover);
 ```
@@ -27,7 +27,7 @@ Vue.use(Popover);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

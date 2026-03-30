@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Field } from 'vant';
+import { Field } from 'vant-wx';
 
 Vue.use(Field);
 ```

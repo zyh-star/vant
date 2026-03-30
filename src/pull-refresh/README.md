@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { PullRefresh } from 'vant';
+import { PullRefresh } from 'vant-wx';
 
 Vue.use(PullRefresh);
 ```
@@ -22,7 +22,7 @@ The `refresh` event will be Emitted when pull refresh, you should set `v-model` 
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

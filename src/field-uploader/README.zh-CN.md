@@ -13,7 +13,7 @@
 
 ```js
 import Vue from 'vue';
-import { FieldUploader } from 'vant';
+import { FieldUploader } from 'vant-wx';
 
 Vue.use(FieldUploader);
 ```

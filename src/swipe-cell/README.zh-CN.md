@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { SwipeCell } from 'vant';
+import { SwipeCell } from 'vant-wx';
 
 Vue.use(SwipeCell);
 ```

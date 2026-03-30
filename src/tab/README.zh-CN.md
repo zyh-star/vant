@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Tab, Tabs } from 'vant';
+import { Tab, Tabs } from 'vant-wx';
 
 Vue.use(Tab);
 Vue.use(Tabs);
@@ -82,7 +82,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -117,7 +117,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {

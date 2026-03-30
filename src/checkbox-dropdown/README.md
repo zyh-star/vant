@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { CheckboxDropdown } from 'vant';
+import { CheckboxDropdown } from 'vant-wx';
 
 Vue.use(CheckboxDropdown);
 ```

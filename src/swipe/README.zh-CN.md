@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Swipe, SwipeItem } from 'vant';
+import { Swipe, SwipeItem } from 'vant-wx';
 
 Vue.use(Swipe);
 Vue.use(SwipeItem);
@@ -53,7 +53,7 @@ Vue.use(SwipeItem);
 
 ```js
 import Vue from 'vue';
-import { Lazyload } from 'vant';
+import { Lazyload } from 'vant-wx';
 
 Vue.use(Lazyload);
 
@@ -81,7 +81,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {

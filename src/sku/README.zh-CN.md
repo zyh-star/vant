@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Sku } from 'vant';
+import { Sku } from 'vant-wx';
 
 Vue.use(Sku);
 ```
@@ -280,9 +280,9 @@ sku: {
 
 ```js
 [
-  sku_id: 239883,
+  (sku_id: 239883),
   // 规格属性, 数据结构和properties相同
-  properties: Properties
+  (properties: Properties),
 ];
 ```
 

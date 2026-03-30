@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Divider } from 'vant';
+import { Divider } from 'vant-wx';
 
 Vue.use(Divider);
 ```

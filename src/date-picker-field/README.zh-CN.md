@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { DatePickerField } from 'vant';
+import { DatePickerField } from 'vant-wx';
 
 Vue.use(DatePickerField);
 ```

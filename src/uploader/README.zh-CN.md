@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Uploader } from 'vant';
+import { Uploader } from 'vant-wx';
 
 Vue.use(Uploader);
 ```
@@ -124,7 +124,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -143,7 +143,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -200,7 +200,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {
@@ -247,7 +247,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

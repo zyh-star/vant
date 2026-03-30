@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Slider } from 'vant';
+import { Slider } from 'vant-wx';
 
 Vue.use(Slider);
 ```
@@ -22,7 +22,7 @@ Vue.use(Slider);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {
@@ -47,7 +47,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {
@@ -128,7 +128,7 @@ export default {
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

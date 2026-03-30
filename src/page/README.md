@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Page } from 'vant';
+import { Page } from 'vant-wx';
 
 Vue.use(Page);
 ```
@@ -34,7 +34,7 @@ The Page component is a page layout container that includes a navigation bar, co
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   methods: {

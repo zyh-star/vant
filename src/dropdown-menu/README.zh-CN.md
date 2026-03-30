@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { DropdownMenu, DropdownItem } from 'vant';
+import { DropdownMenu, DropdownItem } from 'vant-wx';
 
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);

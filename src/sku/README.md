@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { Sku } from 'vant';
+import { Sku } from 'vant-wx';
 
 Vue.use(Sku);
 ```

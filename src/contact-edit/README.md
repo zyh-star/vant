@@ -4,7 +4,7 @@
 
 ```js
 import Vue from 'vue';
-import { ContactEdit } from 'vant';
+import { ContactEdit } from 'vant-wx';
 
 Vue.use(ContactEdit);
 ```
@@ -25,7 +25,7 @@ Vue.use(ContactEdit);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {

@@ -8,7 +8,7 @@ A list component to show items and control loading status.
 
 ```js
 import Vue from 'vue';
-import { List } from 'vant';
+import { List } from 'vant-wx';
 
 Vue.use(List);
 ```
@@ -181,8 +181,8 @@ Use [ref](https://vuejs.org/v2/api/#ref) to get List instance and call instance 
 
 How to use: [Custom Theme](#/en-US/theme).
 
-| Name                    | Default Value   | Description |
-| ----------------------- | --------------- | ----------- |
-| @list-text-color        | `@gray-6`       | -           |
-| @list-text-font-size    | `@font-size-md` | -           |
-| @list-text-line-height  | `50px`          | -           |
+| Name                   | Default Value   | Description |
+| ---------------------- | --------------- | ----------- |
+| @list-text-color       | `@gray-6`       | -           |
+| @list-text-font-size   | `@font-size-md` | -           |
+| @list-text-line-height | `50px`          | -           |

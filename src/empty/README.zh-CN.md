@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { Empty } from 'vant';
+import { Empty } from 'vant-wx';
 
 Vue.use(Empty);
 ```

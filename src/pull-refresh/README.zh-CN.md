@@ -8,7 +8,7 @@
 
 ```js
 import Vue from 'vue';
-import { PullRefresh } from 'vant';
+import { PullRefresh } from 'vant-wx';
 
 Vue.use(PullRefresh);
 ```
@@ -26,7 +26,7 @@ Vue.use(PullRefresh);
 ```
 
 ```js
-import { Toast } from 'vant';
+import { Toast } from 'vant-wx';
 
 export default {
   data() {
