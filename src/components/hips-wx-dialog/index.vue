@@ -1,6 +1,6 @@
 <!--
 * @description 确认框
-* @fileName HipsWxDialog.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 08:23:18
 !-->

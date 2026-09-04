@@ -1,6 +1,6 @@
 <!--
 * @description 单选框
-* @fileName HipsWxSingle.vue
+* @fileName hips-wx-single/index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 09:12:00
 !-->
@@ -87,8 +87,8 @@ import {
   Radio,
   Toast,
 } from "vant";
-import HipsWxList from "../HipsWxList.vue";
-import HipsWxCard from "../HipsWxCard.vue";
+import HipsWxList from "../hips-wx-list/index.vue";
+import HipsWxCard from "../hips-wx-card/index.vue";
 import CardLabel from "./view/card/CardLabel.vue";
 // import { isEmpty } from "lodash";
 // import HipsWxSingleProps from "@/props/hips-wx-single";

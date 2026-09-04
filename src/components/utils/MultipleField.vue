@@ -1,6 +1,6 @@
 <!--
 * @description 多选框
-* @fileName HipsWxSingle.vue
+* @fileName hips-wx-single/index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 09:12:00
 !-->
@@ -96,8 +96,8 @@ import {
   Checkbox,
   Toast,
 } from "vant";
-import HipsWxList from "../HipsWxList.vue";
-import HipsWxCard from "../HipsWxCard.vue";
+import HipsWxList from "../hips-wx-list/index.vue";
+import HipsWxCard from "../hips-wx-card/index.vue";
 import CardLabel from "./view/card/CardLabel.vue";
 import mixin from "@/mixin/single";
 

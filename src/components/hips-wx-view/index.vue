@@ -1,6 +1,6 @@
 <!--
 * @description 
-* @fileName demo.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/12/10 09:29:16
 !-->
@@ -54,12 +54,12 @@
 
 <script>
 /** ===== import ===== */
-import NavBar from "./utils/view/NavBar.vue";
-import QueryList from "./utils/view/list/QueryList.vue";
-import SearchList from "./utils/view/list/SearchList.vue";
-import DataList from "./utils/view/list/DataList.vue";
-import BtnList from "./utils/view/list/BtnList.vue";
-import TabsList from "./utils/view/list/TabsList.vue";
+import NavBar from "../utils/view/NavBar.vue";
+import QueryList from "../utils/view/list/QueryList.vue";
+import SearchList from "../utils/view/list/SearchList.vue";
+import DataList from "../utils/view/list/DataList.vue";
+import BtnList from "../utils/view/list/BtnList.vue";
+import TabsList from "../utils/view/list/TabsList.vue";
 /** ===== import ===== */
 
 export default {

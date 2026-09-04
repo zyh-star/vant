@@ -1,6 +1,6 @@
 <!--
 * @description 单选
-* @fileName HipsWxRadio.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/07/04 10:34:24
 !-->

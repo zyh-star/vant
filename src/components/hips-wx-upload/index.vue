@@ -1,6 +1,6 @@
 <!--
 * @description 附件上传
-* @fileName HipsWxUpload.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 17:52:36
 !-->

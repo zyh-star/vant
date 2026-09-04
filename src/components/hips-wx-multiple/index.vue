@@ -1,6 +1,6 @@
 <!--
 * @description 多选框
-* @fileName HipsWxSingle.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 09:12:00
 !-->
@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import MultipleField from "./utils/MultipleField.vue";
-import FieldType from "./utils/FieldType.vue";
+import MultipleField from "../utils/MultipleField.vue";
+import FieldType from "../utils/FieldType.vue";
 
 export default {
   // 组件名称

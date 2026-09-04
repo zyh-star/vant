@@ -1,6 +1,6 @@
 <!--
 * @description 1
-* @fileName HipsWxCard.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/06/25 16:54:00
 !-->

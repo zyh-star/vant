@@ -67,11 +67,11 @@
 <script>
 /** ===== import ===== */
 import { Tag, Button, Field } from "vant";
-import HipsWxCard from "./components/HipsWxCard.vue";
-import HipsWxView from "./components/HipsWxView.vue";
-import HipsWxPage from "./components/HipsWxPage.vue";
-import HipsWxSingle from "./components/HipsWxSingle.vue";
-import HipsWxDate from "./components/HipsWxDate.vue";
+import HipsWxCard from "./components/hips-wx-card/index.vue";
+import HipsWxView from "./components/hips-wx-view/index.vue";
+import HipsWxPage from "./components/hips-wx-page/index.vue";
+import HipsWxSingle from "./components/hips-wx-single/index.vue";
+import HipsWxDate from "./components/hips-wx-date/index.vue";
 import HipsWxSearchToList from "./components/hips-wx-search-to-list";
 
 /** ===== import ===== */

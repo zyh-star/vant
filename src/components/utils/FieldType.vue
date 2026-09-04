@@ -148,10 +148,10 @@ import { Form, Field, Switch } from "vant";
 //   HipsWxUpload,
 //   HipsWxDate,
 // } from "..";
-import HipsWxCard from "../HipsWxCard.vue";
-import HipsWxRadio from "../HipsWxRadio.vue";
-import HipsWxUpload from "../HipsWxUpload.vue";
-import HipsWxDate from "../HipsWxDate.vue";
+import HipsWxCard from "../hips-wx-card/index.vue";
+import HipsWxRadio from "../hips-wx-radio/index.vue";
+import HipsWxUpload from "../hips-wx-upload/index.vue";
+import HipsWxDate from "../hips-wx-date/index.vue";
 import BtnType from "./BtnType.vue";
 import SingleField from "./SingleField.vue";
 import MultipleField from "./MultipleField.vue";

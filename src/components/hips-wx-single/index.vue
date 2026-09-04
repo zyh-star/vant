@@ -1,6 +1,6 @@
 <!--
 * @description 单选框
-* @fileName HipsWxSingle.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 09:12:00
 !-->
@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import SingleField from "./utils/SingleField.vue";
-import FieldType from "./utils/FieldType.vue";
+import SingleField from "../utils/SingleField.vue";
+import FieldType from "../utils/FieldType.vue";
 // import mixin from "@/mixin/single";
 
 export default {

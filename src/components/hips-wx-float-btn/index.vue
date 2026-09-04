@@ -1,6 +1,6 @@
 <!--
 * @description 右下方悬浮按钮组件
-* @fileName HipsWxFloatBtn.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 08:41:49
 !-->

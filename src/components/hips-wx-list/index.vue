@@ -1,6 +1,6 @@
 <!--
 * @description 列表
-* @fileName HipsWxList.vue
+* @fileName index.vue
 * @author zheng yuanhou
 * @date 2024/06/26 09:15:19
 !-->
