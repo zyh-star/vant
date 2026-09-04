@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import mixin from "@/mixin/indexV3";
+import mixin from "@/mixin/index";
 import { Popup, Form } from "vant";
 import WxField from "../field/Field.vue";
 import SingleField from "../field/SingleField.vue";

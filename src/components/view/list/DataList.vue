@@ -56,13 +56,13 @@
 
 <script>
 import HipsWxList from "@/components/hips-wx-list/index.vue";
-import Card from "@/components/utils/view/card/Card.vue";
+import Card from "@/components/view/card/Card.vue";
 
 import SearchList from "./SearchList.vue";
 import BtnList from "./BtnList.vue";
 import { SwipeCell } from "vant";
 
-import mixin from "@/mixin/indexV3";
+import mixin from "@/mixin/index";
 
 export default {
   // 组件名称

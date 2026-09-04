@@ -35,7 +35,7 @@
 import { Cell, Tag } from "vant";
 import CardLabel from "./CardLabel.vue";
 
-import mixin from "@/mixin/indexV3";
+import mixin from "@/mixin/index";
 
 export default {
   // 组件名称

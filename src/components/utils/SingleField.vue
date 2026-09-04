@@ -89,7 +89,7 @@ import {
 } from "vant";
 import HipsWxList from "../hips-wx-list/index.vue";
 import HipsWxCard from "../hips-wx-card/index.vue";
-import CardLabel from "./view/card/CardLabel.vue";
+import CardLabel from "../view/card/CardLabel.vue";
 // import { isEmpty } from "lodash";
 // import HipsWxSingleProps from "@/props/hips-wx-single";
 import mixin from "@/mixin/single";

@@ -27,7 +27,7 @@
 <script>
 import { NavBar, Icon } from "vant";
 import { bridge } from "hips-wx-utils";
-import mixin from "@/mixin/indexV3";
+import mixin from "@/mixin/index";
 export default {
   // 组件名称
   name: "NavBar",

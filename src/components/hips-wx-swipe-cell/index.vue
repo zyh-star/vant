@@ -33,7 +33,7 @@
 
 <script>
 import { SwipeCell } from "vant";
-import Card from "@/components/utils/view/card/Card.vue";
+import Card from "@/components/view/card/Card.vue";
 
 export default {
   // 组件名称

@@ -33,7 +33,7 @@ import { Tabs, Tab } from "vant";
 
 import DataList from "./DataList.vue";
 
-import mixin from "@/mixin/indexV3";
+import mixin from "@/mixin/index";
 
 export default {
   // 组件名称

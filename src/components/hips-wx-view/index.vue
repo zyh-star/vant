@@ -54,12 +54,12 @@
 
 <script>
 /** ===== import ===== */
-import NavBar from "../utils/view/NavBar.vue";
-import QueryList from "../utils/view/list/QueryList.vue";
-import SearchList from "../utils/view/list/SearchList.vue";
-import DataList from "../utils/view/list/DataList.vue";
-import BtnList from "../utils/view/list/BtnList.vue";
-import TabsList from "../utils/view/list/TabsList.vue";
+import NavBar from "../view/NavBar.vue";
+import QueryList from "../view/list/QueryList.vue";
+import SearchList from "../view/list/SearchList.vue";
+import DataList from "../view/list/DataList.vue";
+import BtnList from "../view/list/BtnList.vue";
+import TabsList from "../view/list/TabsList.vue";
 /** ===== import ===== */
 
 export default {

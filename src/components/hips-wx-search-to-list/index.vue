@@ -106,9 +106,9 @@ import { Form, Button, NavBar, Field, SwipeCell } from "vant";
 import HipsWxDate from "../hips-wx-date/index.vue";
 import HipsWxSingle from "../hips-wx-single/index.vue";
 import HipsWxList from "../hips-wx-list/index.vue";
-import Card from "@/components/utils/view/card/Card.vue";
+import Card from "@/components/view/card/Card.vue";
 
-import mixin from "@/mixin/indexV3";
+import mixin from "@/mixin/index";
 import debounce from "lodash.debounce";
 import { bridge } from "hips-wx-utils";
 

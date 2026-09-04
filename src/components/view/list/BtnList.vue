@@ -34,7 +34,7 @@
 
 <script>
 import { Button, Popup } from "vant";
-import mixin from "@/mixin/indexV3";
+import mixin from "@/mixin/index";
 export default {
   // 组件名称
   name: "BtnList",

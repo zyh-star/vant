@@ -36,7 +36,7 @@
 <script>
 import { Cell, Tag } from "vant";
 import { isEmpty } from "lodash";
-import HipsWxCardProps from "@/props/hips-wx-card";
+import HipsWxCardProps from "./props";
 
 export default {
   // 组件名称
